@@ -1,4 +1,5 @@
 import db from "./database.js";
+import bcrypt from "bcrypt";
 
 db.exec(`CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -8,12 +9,13 @@ db.exec(`CREATE TABLE IF NOT EXISTS usuarios (
     tipo TEXT NOT NULL CHECK (tipo IN ('CLIENTE', 'ADM'))
 )`);
 
+const hashAdmin = bcrypt.hashSync('admin123', 10);
+
 db.exec(`INSERT OR IGNORE INTO usuarios (nome, email, senha, tipo) VALUES
-    ('Administrador', 'admin@montehorebe.com', 'admin123', 'ADM')`);
+    ('Administrador', 'admin@montehorebe.com', '${hashAdmin}', 'ADM')`);
 
 function criarUsuario({ nome, email, senha }) {
   const tipo = "CLIENTE";
-  //console.log("repository", nome, email, senha, tipo);
   const stmt = db.prepare(
     `INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)`,
   );
