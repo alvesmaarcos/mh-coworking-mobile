@@ -1,0 +1,27 @@
+{
+  "name": "mh-coworking",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/alvesmaarcos/mh-coworking-mobile#readme",
+  "bugs": {
+    "url": "https://github.com/alvesmaarcos/mh-coworking-mobile/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvesmaarcos/mh-coworking-mobile.git"
+  },
+  "type": "module",
+  "main": "src/app/server.js",
+  "scripts": {
+    "start": "node src/app/server.js",
+    "dev": "nodemon src/app/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
