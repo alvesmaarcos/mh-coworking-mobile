@@ -1,0 +1,170 @@
+openapi: 3.0.0
+info:
+  title: Coworking Monte Horebe API
+  description: API para reserva de salas de coworking.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor Local
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        email:
+          type: string
+        tipo:
+          type: string
+          enum: [CLIENTE, ADM]
+    UsuarioInput:
+      type: object
+      required: [nome, email]
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /usuarios:
+    post:
+      summary: Cadastrar usuário
+      description: Cria uma nova conta de cliente no sistema.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, email, senha]
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '201':
+          description: Usuário criado com sucesso
+        '400':
+          description: Dados inválidos
+        '409':
+          description: Email já cadastrado
+  /login:
+    /usuarios/{id}:
+    get:
+      summary: Buscar dados do próprio usuário
+      description: Retorna os dados do usuário logado. Só o próprio usuário pode acessar.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Usuário não tem permissão para acessar este recurso
+        '404':
+          description: Usuário não encontrado
+
+    put:
+      summary: Atualizar dados do próprio usuário
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioInput'
+      responses:
+        '200':
+          description: Usuário atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '400':
+          description: Dados inválidos
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Usuário não tem permissão para editar este recurso
+        '404':
+          description: Usuário não encontrado
+        '409':
+          description: Email já usado por outro usuário
+
+    delete:
+      summary: Excluir a própria conta
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Usuário excluído com sucesso
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Usuário não tem permissão para excluir este recurso
+        '404':
+          description: Usuário não encontrado
+    post:
+      summary: Login de usuário
+      description: Autentica um usuário existente e devolve um token JWT.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+        '400':
+          description: Email e senha são obrigatórios
+        '401':
+          description: Email ou senha inválidos
