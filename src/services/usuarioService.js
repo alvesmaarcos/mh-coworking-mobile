@@ -49,4 +49,49 @@ async function login(email, senha) {
   return { usuario, token };
 }
 
-export default { cadastrarUsuario, login };
+async function buscarPorId(id) {
+  const usuario = usuarioRepository.buscarPorId(id);
+
+  if (!usuario) {
+    throw new AppError("Usuário não encontrado", 404);
+  }
+
+  return usuario;
+}
+
+async function atualizar(id, { nome, email }) {
+  const usuario = usuarioRepository.buscarPorId(id);
+
+  if (!usuario) {
+    throw new AppError("Usuário não encontrado", 404);
+  }
+
+  if (!nome || !email) {
+    throw new AppError("Nome e email são obrigatórios", 400);
+  }
+
+  if (!email.includes("@")) {
+    throw new AppError("Email inválido", 400);
+  }
+
+  const emailEmUso = usuarioRepository.buscarPorEmail(email);
+  if (emailEmUso && emailEmUso.id !== Number(id)) {
+    throw new AppError("Já existe um usuário cadastrado com este email", 409);
+  }
+
+  usuarioRepository.atualizar(id, { nome, email });
+
+  return usuarioRepository.buscarPorId(id);
+}
+
+async function excluir(id) {
+  const usuario = usuarioRepository.buscarPorId(id);
+
+  if (!usuario) {
+    throw new AppError("Usuário não encontrado", 404);
+  }
+
+  usuarioRepository.excluir(id);
+}
+
+export default { cadastrarUsuario, login, buscarPorId, atualizar, excluir };

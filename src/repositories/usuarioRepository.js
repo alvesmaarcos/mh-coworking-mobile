@@ -32,4 +32,12 @@ function buscarPorEmail(email) {
   return db.prepare(`SELECT * FROM usuarios WHERE email = ?`).get(email);
 }
 
-export default { criarUsuario, buscarPorId, buscarPorEmail };
+function atualizar(id, { nome, email }) {
+  db.prepare('UPDATE usuarios SET nome = ?, email = ? WHERE id = ?').run(nome, email, id);
+}
+
+function excluir(id) {
+  db.prepare('DELETE FROM usuarios WHERE id = ?').run(id);
+}
+
+export default { criarUsuario, buscarPorId, buscarPorEmail, atualizar, excluir };
