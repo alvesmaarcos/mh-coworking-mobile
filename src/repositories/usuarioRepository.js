@@ -1,4 +1,5 @@
 import db from "./database.js";
+import bcrypt from "bcrypt";
 
 db.exec(`CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -8,12 +9,13 @@ db.exec(`CREATE TABLE IF NOT EXISTS usuarios (
     tipo TEXT NOT NULL CHECK (tipo IN ('CLIENTE', 'ADM'))
 )`);
 
+const hashAdmin = bcrypt.hashSync('admin123', 10);
+
 db.exec(`INSERT OR IGNORE INTO usuarios (nome, email, senha, tipo) VALUES
-    ('Administrador', 'admin@montehorebe.com', 'admin123', 'ADM')`);
+    ('Administrador', 'admin@montehorebe.com', '${hashAdmin}', 'ADM')`);
 
 function criarUsuario({ nome, email, senha }) {
   const tipo = "CLIENTE";
-  //console.log("repository", nome, email, senha, tipo);
   const stmt = db.prepare(
     `INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)`,
   );
@@ -30,4 +32,12 @@ function buscarPorEmail(email) {
   return db.prepare(`SELECT * FROM usuarios WHERE email = ?`).get(email);
 }
 
-export default { criarUsuario, buscarPorId, buscarPorEmail };
+function atualizar(id, { nome, email }) {
+  db.prepare('UPDATE usuarios SET nome = ?, email = ? WHERE id = ?').run(nome, email, id);
+}
+
+function excluir(id) {
+  db.prepare('DELETE FROM usuarios WHERE id = ?').run(id);
+}
+
+export default { criarUsuario, buscarPorId, buscarPorEmail, atualizar, excluir };
