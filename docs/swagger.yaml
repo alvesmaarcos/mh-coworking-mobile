@@ -168,3 +168,83 @@ paths:
           description: Email e senha são obrigatórios
         '401':
           description: Email ou senha inválidos
+  /salas/{id}:
+    get:
+      summary: Detalhar sala
+      description: Retorna os dados de uma sala. Não exige login.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sala encontrada
+          content:
+            application/json:
+              example: { "id": 1, "nome": "Sala A", "descricao": "Sala individual", "atributos": "Ar-condicionado, TV", "valor_hora": 25, "imagem_url": "/public/sala-individual-1.jpeg" }
+        '404':
+          description: Sala não encontrada
+
+    put:
+      summary: Editar sala
+      description: Substitui os dados da sala. Apenas ADM. Mesmas validações da criação.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nome, valor_hora]
+              properties:
+                nome:
+                  type: string
+                descricao:
+                  type: string
+                atributos:
+                  type: string
+                valor_hora:
+                  type: number
+                imagem_url:
+                  type: string
+            example: { "nome": "Sala B", "descricao": "Sala de reuniões", "atributos": "TV, 6 cadeiras", "valor_hora": 30, "imagem_url": "/public/sala-reunioes-1.jpeg" }
+      responses:
+        '200':
+          description: Sala atualizada
+        '400':
+          description: Nome é obrigatório / Valor por hora deve ser um número maior que zero
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Apenas administradores podem editar salas
+        '404':
+          description: Sala não encontrada
+
+    delete:
+      summary: Excluir sala
+      description: Exclui a sala. Apenas ADM. Não permite excluir sala com reservas a partir de hoje.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Sala excluída
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Apenas administradores podem excluir salas
+        '404':
+          description: Sala não encontrada
+        '409':
+          description: Não é possível excluir a sala, pois ela possui reservas futuras
