@@ -1,7 +1,13 @@
 openapi: 3.0.0
 info:
   title: Coworking Monte Horebe API
-  description: API para reserva de salas de coworking.
+  description: >-
+    API para reserva de salas de coworking.
+
+
+    Todo cadastro em `POST /usuarios` cria um CLIENTE. O único ADM é criado
+    automaticamente ao iniciar a API: **admin@montehorebe.com** / **admin123**.
+    Faça `POST /login` com essas credenciais e use o token em *Authorize*.
   version: 1.0.0
 servers:
   - url: http://localhost:3000
@@ -35,9 +41,17 @@ components:
           type: string
 security:
   - bearerAuth: []
+tags:
+  - name: Usuários
+    description: Cadastro, login e perfil
+  - name: Salas
+    description: Gestão de salas
+  - name: Reservas
+    description: Horários, reservas e cancelamentos
 paths:
   /usuarios:
     post:
+      tags: [Usuários]
       summary: Cadastrar usuário
       description: Cria uma nova conta de cliente no sistema.
       security: []
@@ -63,8 +77,42 @@ paths:
         '409':
           description: Email já cadastrado
   /login:
-    /usuarios/{id}:
+    post:
+      tags: [Usuários]
+      summary: Login de usuário
+      description: Autentica um usuário existente e devolve um token JWT.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, senha]
+              properties:
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+                  token:
+                    type: string
+        '400':
+          description: Email e senha são obrigatórios
+        '401':
+          description: Email ou senha inválidos
+  /usuarios/{id}:
     get:
+      tags: [Usuários]
       summary: Buscar dados do próprio usuário
       description: Retorna os dados do usuário logado. Só o próprio usuário pode acessar.
       parameters:
@@ -88,6 +136,7 @@ paths:
           description: Usuário não encontrado
 
     put:
+      tags: [Usuários]
       summary: Atualizar dados do próprio usuário
       parameters:
         - name: id
@@ -120,6 +169,7 @@ paths:
           description: Email já usado por outro usuário
 
     delete:
+      tags: [Usuários]
       summary: Excluir a própria conta
       parameters:
         - name: id
@@ -136,40 +186,91 @@ paths:
           description: Usuário não tem permissão para excluir este recurso
         '404':
           description: Usuário não encontrado
-    post:
-      summary: Login de usuário
-      description: Autentica um usuário existente e devolve um token JWT.
+  /salas:
+    get:
+      tags: [Salas]
+      summary: Listar salas
+      description: Retorna todas as salas cadastradas. Não exige login.
       security: []
+      responses:
+        '200':
+          description: Lista de salas
+          content:
+            application/json:
+              example:
+                - { "id": 1, "nome": "Sala A", "descricao": "Sala individual", "atributos": "Ar-condicionado, TV", "valor_hora": 25, "imagem_url": "/public/sala-individual-1.jpeg" }
+
+    post:
+      tags: [Salas]
+      summary: Cadastrar sala
+      description: Cria uma nova sala. Apenas ADM.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [email, senha]
+              required: [nome, valor_hora]
               properties:
-                email:
+                nome:
                   type: string
-                senha:
+                descricao:
                   type: string
+                atributos:
+                  type: string
+                valor_hora:
+                  type: number
+                imagem_url:
+                  type: string
+            example: { "nome": "Sala A", "descricao": "Sala individual", "atributos": "Ar-condicionado, TV", "valor_hora": 25, "imagem_url": "/public/sala-individual-1.jpeg" }
+      responses:
+        '201':
+          description: Sala criada
+        '400':
+          description: Nome é obrigatório / Valor por hora deve ser um número maior que zero
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Apenas administradores podem cadastrar salas
+
+  /salas/{id}/horarios:
+    get:
+      tags: [Reservas]
+      summary: Consultar horários da sala
+      description: >-
+        Retorna os horários do coworking (8 a 17) para a sala e data informadas,
+        indicando quais já estão reservados. Não exige login.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: data
+          in: query
+          required: true
+          description: Data no formato AAAA-MM-DD.
+          schema:
+            type: string
+            format: date
+          example: '2099-12-31'
       responses:
         '200':
-          description: Login bem-sucedido
+          description: Horários da sala na data
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  usuario:
-                    $ref: '#/components/schemas/Usuario'
-                  token:
-                    type: string
+              example:
+                - { "hora": 8, "reservado": false }
+                - { "hora": 9, "reservado": true }
         '400':
-          description: Email e senha são obrigatórios
-        '401':
-          description: Email ou senha inválidos
+          description: Data inválida. Use o formato AAAA-MM-DD
+        '404':
+          description: Sala não encontrada
+
   /salas/{id}:
     get:
+      tags: [Salas]
       summary: Detalhar sala
       description: Retorna os dados de uma sala. Não exige login.
       security: []
@@ -189,6 +290,7 @@ paths:
           description: Sala não encontrada
 
     put:
+      tags: [Salas]
       summary: Editar sala
       description: Substitui os dados da sala. Apenas ADM. Mesmas validações da criação.
       parameters:
@@ -229,6 +331,7 @@ paths:
           description: Sala não encontrada
 
     delete:
+      tags: [Salas]
       summary: Excluir sala
       description: Exclui a sala. Apenas ADM. Não permite excluir sala com reservas a partir de hoje.
       parameters:
@@ -251,6 +354,7 @@ paths:
 
   /reservas:
     get:
+      tags: [Reservas]
       summary: Consultar reservas e histórico
       description: >-
         Retorna as reservas em ordem crescente de data e hora.
@@ -328,8 +432,52 @@ paths:
               example:
                 erro: Token não fornecido
 
+    post:
+      tags: [Reservas]
+      summary: Criar reserva
+      description: >-
+        Reserva uma sala em uma data e hora. Apenas CLIENTE. O valor da reserva
+        é o valor da hora da sala no momento da criação.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sala_id, data, hora]
+              properties:
+                sala_id:
+                  type: integer
+                data:
+                  type: string
+                  format: date
+                hora:
+                  type: integer
+                  minimum: 8
+                  maximum: 17
+            example: { "sala_id": 2, "data": "2099-12-31", "hora": 9 }
+      responses:
+        '201':
+          description: Reserva criada
+          content:
+            application/json:
+              example: { "id": 7, "usuario_id": 3, "sala_id": 2, "data": "2099-12-31", "hora": 9, "valor": 80 }
+        '400':
+          description: Data inválida / Horário inválido (deve ser de 8 a 17)
+        '401':
+          description: Token ausente ou inválido
+        '403':
+          description: Apenas clientes podem realizar reservas
+        '404':
+          description: Sala não encontrada
+        '409':
+          description: Já existe uma reserva para esta sala, data e horário
+
   /reservas/{id}:
     delete:
+      tags: [Reservas]
       summary: Cancelar reserva futura
       description: >-
         CLIENTE pode cancelar somente a própria reserva; ADM pode cancelar
