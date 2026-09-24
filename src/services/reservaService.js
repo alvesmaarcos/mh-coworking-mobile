@@ -1,7 +1,76 @@
-import AppError from "../app/AppError.js";
 import reservaRepository from "../repositories/reservaRepository.js";
+import salaRepository from "../repositories/salaRepository.js";
+import AppError from "../app/AppError.js";
 
-const FORMATO_DATA = /^\d{4}-\d{2}-\d{2}$/;
+const HORARIOS_COWORKING = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+function validarFormatoData(data) {
+  if (typeof data !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+    return false;
+  }
+
+  const [ano, mes, dia] = data.split("-").map(Number);
+  const dataConvertida = new Date(Date.UTC(ano, mes - 1, dia));
+
+  return (
+    dataConvertida.getUTCFullYear() === ano &&
+    dataConvertida.getUTCMonth() === mes - 1 &&
+    dataConvertida.getUTCDate() === dia
+  );
+}
+
+function horariosDisponiveis(sala_id, data) {
+  const sala = salaRepository.buscarPorId(sala_id);
+  if (!sala) {
+    throw new AppError("Sala não encontrada", 404);
+  }
+
+  if (!validarFormatoData(data)) {
+    throw new AppError("Data inválida. Use o formato AAAA-MM-DD", 400);
+  }
+
+  const reservas = reservaRepository.listarPorSalaEData(sala_id, data);
+  const horasReservadas = new Set(reservas.map((reserva) => reserva.hora));
+
+  return HORARIOS_COWORKING.map((hora) => ({
+    hora,
+    reservado: horasReservadas.has(hora),
+  }));
+}
+
+function criarReserva(usuario, { sala_id, data, hora }) {
+  if (usuario.tipo !== "CLIENTE") {
+    throw new AppError("Apenas clientes podem realizar reservas", 403);
+  }
+
+  const sala = salaRepository.buscarPorId(sala_id);
+  if (!sala) {
+    throw new AppError("Sala não encontrada", 404);
+  }
+
+  if (!validarFormatoData(data)) {
+    throw new AppError("Data inválida. Use o formato AAAA-MM-DD", 400);
+  }
+
+  const horaNumero = Number(hora);
+  if (!HORARIOS_COWORKING.includes(horaNumero)) {
+    throw new AppError("Horário inválido. Deve ser um dos horários do coworking (8 a 17)", 400);
+  }
+
+  const reservasExistentes = reservaRepository.listarPorSalaEData(sala_id, data);
+  const conflito = reservasExistentes.some((reserva) => reserva.hora === horaNumero);
+  if (conflito) {
+    throw new AppError("Já existe uma reserva para esta sala, data e horário", 409);
+  }
+
+  return reservaRepository.criar({
+    usuario_id: usuario.id,
+    sala_id,
+    data,
+    hora: horaNumero,
+    valor: sala.valor_hora,
+  });
+}
 
 function validarId(valor, nome = "ID") {
   const id = Number(valor);
@@ -9,15 +78,6 @@ function validarId(valor, nome = "ID") {
     throw new AppError(`${nome} inválido`, 400);
   }
   return id;
-}
-
-function dataValida(data) {
-  if (!FORMATO_DATA.test(data)) return false;
-  const [ano, mes, dia] = data.split("-").map(Number);
-  const criada = new Date(Date.UTC(ano, mes - 1, dia));
-  return criada.getUTCFullYear() === ano
-    && criada.getUTCMonth() === mes - 1
-    && criada.getUTCDate() === dia;
 }
 
 function normalizarUsuario(usuario) {
@@ -36,7 +96,7 @@ function listarReservas(usuario, filtros = {}) {
   }
 
   if (autenticado.tipo === "ADM" && filtros.data !== undefined) {
-    if (!dataValida(filtros.data)) {
+    if (!validarFormatoData(filtros.data)) {
       throw new AppError("Data inválida. Use o formato AAAA-MM-DD", 400);
     }
     consulta.data = filtros.data;
@@ -72,4 +132,10 @@ function cancelarReserva(idInformado, usuario, agora = new Date()) {
   reservaRepository.excluir(id);
 }
 
-export default { listarReservas, cancelarReserva };
+export default {
+  HORARIOS_COWORKING,
+  horariosDisponiveis,
+  criarReserva,
+  listarReservas,
+  cancelarReserva,
+};
