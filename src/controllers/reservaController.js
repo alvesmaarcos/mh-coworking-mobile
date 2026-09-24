@@ -1,5 +1,9 @@
 import reservaService from "../services/reservaService.js";
 
+function obterUsuario(req) {
+  return { id: req.usuarioId, tipo: req.usuarioTipo };
+}
+
 async function horarios(req, res, next) {
   try {
     const { id } = req.params;
@@ -15,10 +19,9 @@ async function horarios(req, res, next) {
 
 async function criar(req, res, next) {
   try {
-    const usuario = { id: req.usuarioId, tipo: req.usuarioTipo };
     const { sala_id, data, hora } = req.body;
 
-    const reserva = await reservaService.criarReserva(usuario, { sala_id, data, hora });
+    const reserva = await reservaService.criarReserva(obterUsuario(req), { sala_id, data, hora });
 
     res.status(201).json(reserva);
   } catch (error) {
@@ -26,4 +29,22 @@ async function criar(req, res, next) {
   }
 }
 
-export default { horarios, criar };
+function listar(req, res, next) {
+  try {
+    const reservas = reservaService.listarReservas(obterUsuario(req), req.query);
+    res.status(200).json(reservas);
+  } catch (error) {
+    next(error);
+  }
+}
+
+function cancelar(req, res, next) {
+  try {
+    reservaService.cancelarReserva(req.params.id, obterUsuario(req));
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+}
+
+export default { horarios, criar, listar, cancelar };
