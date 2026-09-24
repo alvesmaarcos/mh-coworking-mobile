@@ -26,4 +26,22 @@ function listarTodas() {
   return db.prepare(`SELECT * FROM salas`).all();
 }
 
-export default { criar, buscarPorId, listarTodas };
+function atualizar(id, { nome, descricao, atributos, valor_hora, imagem_url }) {
+  db.prepare(
+    `UPDATE salas SET nome = ?, descricao = ?, atributos = ?, valor_hora = ?, imagem_url = ? WHERE id = ?`,
+  ).run(nome, descricao, atributos, valor_hora, imagem_url, id);
+
+  return buscarPorId(id);
+}
+
+function excluir(id) {
+  db.prepare(`DELETE FROM salas WHERE id = ?`).run(id);
+}
+
+function possuiReservasFuturas(id) {
+  return !!db
+    .prepare(`SELECT 1 FROM reservas WHERE sala_id = ? AND data >= date('now', 'localtime') LIMIT 1`)
+    .get(id);
+}
+
+export default { criar, buscarPorId, listarTodas, atualizar, excluir, possuiReservasFuturas };
