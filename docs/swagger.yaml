@@ -248,3 +248,135 @@ paths:
           description: Sala não encontrada
         '409':
           description: Não é possível excluir a sala, pois ela possui reservas futuras
+
+  /reservas:
+    get:
+      summary: Consultar reservas e histórico
+      description: >-
+        Retorna as reservas em ordem crescente de data e hora.
+        CLIENTE recebe somente as próprias reservas, futuras e passadas;
+        os filtros são ignorados para clientes. ADM recebe todas as reservas
+        e pode filtrar por sala, por data ou por ambos.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sala_id
+          in: query
+          required: false
+          description: ID da sala. Filtro exclusivo para ADM.
+          schema:
+            type: integer
+            minimum: 1
+          example: 2
+        - name: data
+          in: query
+          required: false
+          description: Data válida no formato AAAA-MM-DD. Filtro exclusivo para ADM.
+          schema:
+            type: string
+            format: date
+          example: '2099-12-31'
+      responses:
+        '200':
+          description: Lista de reservas, incluindo o histórico
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    usuario_id:
+                      type: integer
+                    sala_id:
+                      type: integer
+                    data:
+                      type: string
+                      format: date
+                    hora:
+                      type: integer
+                      minimum: 8
+                      maximum: 17
+                    valor:
+                      type: number
+                      description: Valor da hora registrado no momento da reserva.
+                    sala_nome:
+                      type: string
+                    usuario_nome:
+                      type: string
+              example:
+                - id: 7
+                  usuario_id: 3
+                  sala_id: 2
+                  data: '2099-12-31'
+                  hora: 9
+                  valor: 80
+                  sala_nome: Sala de Reuniões
+                  usuario_nome: Ana
+        '400':
+          description: ID da sala ou data inválidos no filtro do ADM
+          content:
+            application/json:
+              example:
+                erro: Data inválida. Use o formato AAAA-MM-DD
+        '401':
+          description: Token ausente, inválido ou expirado, ou usuário autenticado inválido
+          content:
+            application/json:
+              example:
+                erro: Token não fornecido
+
+  /reservas/{id}:
+    delete:
+      summary: Cancelar reserva futura
+      description: >-
+        CLIENTE pode cancelar somente a própria reserva; ADM pode cancelar
+        a reserva de qualquer usuário. O início da reserva deve ser posterior
+        ao momento do cancelamento, considerando o horário local do servidor.
+        Reservas já iniciadas ou passadas são preservadas no histórico.
+        O cancelamento exclui a reserva e libera o horário.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID da reserva a cancelar.
+          schema:
+            type: integer
+            minimum: 1
+          example: 7
+      responses:
+        '204':
+          description: Reserva cancelada com sucesso. Resposta sem corpo.
+        '400':
+          description: ID da reserva inválido ou reserva já iniciada ou passada
+          content:
+            application/json:
+              examples:
+                idInvalido:
+                  value:
+                    erro: ID da reserva inválido
+                reservaNaoFutura:
+                  value:
+                    erro: Somente reservas futuras podem ser canceladas
+        '401':
+          description: Token ausente, inválido ou expirado, ou usuário autenticado inválido
+          content:
+            application/json:
+              example:
+                erro: Token não fornecido
+        '403':
+          description: Cliente tentando cancelar a reserva de outro usuário
+          content:
+            application/json:
+              example:
+                erro: Você não tem permissão para cancelar esta reserva
+        '404':
+          description: Reserva não encontrada
+          content:
+            application/json:
+              example:
+                erro: Reserva não encontrada
