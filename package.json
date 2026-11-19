@@ -16,13 +16,18 @@
     "build": "npm run build --workspace @mh-coworking/backend",
     "typecheck": "npm run typecheck --workspace @mh-coworking/backend",
     "start": "npm run start --workspace @mh-coworking/backend",
-    "test": "npm run test --workspace @mh-coworking/backend"
+    "test": "npm run test --workspace @mh-coworking/backend",
+    "dev:mobile": "npm run start --workspace @mh-coworking/frontend",
+    "typecheck:mobile": "npm run typecheck --workspace @mh-coworking/frontend",
+    "test:mobile": "npm run test --workspace @mh-coworking/frontend",
+    "build:mobile": "npm run export --workspace @mh-coworking/frontend"
   },
   "private": true,
   "workspaces": [
-    "backend"
+    "backend",
+    "frontend"
   ],
   "engines": {
-    "node": ">=22.9.0"
+    "node": "^22.13.0 || ^24.3.0 || >=26.0.0"
   }
 }

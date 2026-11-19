@@ -4,3 +4,7 @@ node_modules/
 *.db-wal
 .env
 backend/dist/
+frontend/dist/
+frontend/.expo/
+frontend/test-results/
+frontend/playwright-report/
