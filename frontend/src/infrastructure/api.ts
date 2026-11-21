@@ -43,6 +43,7 @@ export class ApiClient {
     }
   }
 
+  register(nome: string, email: string, senha: string) { return this.request<User>('/usuarios', { method: 'POST', body: { nome, email, senha } }); }
   login(email: string, senha: string) { return this.request<Session>('/login', { method: 'POST', body: { email, senha } }); }
   currentUser(session: Session) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
