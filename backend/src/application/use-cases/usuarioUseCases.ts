@@ -1,7 +1,11 @@
+import { randomInt } from 'node:crypto';
 import DomainError from '../../domain/DomainError.js';
 import type { Id, UsuarioAutenticado } from '../../domain/models.js';
-import type { UsuarioRepository, PasswordHasher, TokenService } from '../ports.js';
-export function createUsuarioUseCases(usuarioRepository: UsuarioRepository, passwords: PasswordHasher, tokens: TokenService) {
+import type { UsuarioRepository, PasswordHasher, TokenService, EmailSender, Clock } from '../ports.js';
+const VALIDADE_CODIGO_MS = 15 * 60 * 1000;
+const MAX_TENTATIVAS = 5;
+export function createUsuarioUseCases(usuarioRepository: UsuarioRepository, passwords: PasswordHasher, tokens: TokenService, emails: EmailSender, clock: Clock) {
+    const codigos = new Map<number, { codigo: string; expira: number; tentativas: number }>();
     function verificarDono(id: Id, autenticado: UsuarioAutenticado) {
         if (String(autenticado.id) !== String(id))
             throw new DomainError("Você não tem permissão para acessar este recurso", "forbidden");
@@ -73,5 +77,37 @@ export function createUsuarioUseCases(usuarioRepository: UsuarioRepository, pass
         }
         usuarioRepository.excluir(id);
     }
-    return { cadastrarUsuario, login, buscarPorId, atualizar, excluir };
+    async function solicitarRecuperacao(email: string) {
+        if (!email) {
+            throw new DomainError("Email é obrigatório", "validation");
+        }
+        const usuario = usuarioRepository.buscarPorEmail(email);
+        if (!usuario)
+            return;
+        const codigo = randomInt(0, 1_000_000).toString().padStart(6, "0");
+        codigos.set(usuario.id, { codigo, expira: clock.now().getTime() + VALIDADE_CODIGO_MS, tentativas: 0 });
+        await emails.enviar(usuario.email, "Código de recuperação de senha", `Seu código de recuperação é ${codigo}. Ele expira em 15 minutos.`);
+    }
+    async function redefinirSenha(email: string, codigo: string, senha: string) {
+        if (!email || !codigo || !senha) {
+            throw new DomainError("Email, código e nova senha são obrigatórios", "validation");
+        }
+        if (senha.length < 6) {
+            throw new DomainError("A senha deve conter pelo menos seis caracteres", "validation");
+        }
+        const usuario = usuarioRepository.buscarPorEmail(email);
+        const pedido = usuario && codigos.get(usuario.id);
+        if (!usuario || !pedido || pedido.expira < clock.now().getTime() || pedido.tentativas >= MAX_TENTATIVAS) {
+            if (usuario)
+                codigos.delete(usuario.id);
+            throw new DomainError("Código inválido ou expirado", "validation");
+        }
+        if (pedido.codigo !== String(codigo)) {
+            pedido.tentativas++;
+            throw new DomainError("Código inválido ou expirado", "validation");
+        }
+        codigos.delete(usuario.id);
+        usuarioRepository.atualizarSenha(usuario.id, await passwords.hash(senha));
+    }
+    return { cadastrarUsuario, login, buscarPorId, atualizar, excluir, solicitarRecuperacao, redefinirSenha };
 }

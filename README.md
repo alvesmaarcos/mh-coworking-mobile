@@ -3,7 +3,7 @@
 ## Equipe
 - Anna Beatryz Arruda Ferreira - 566366
 - Davi Sousa Facundo - 565910
-- Enzo Hariel Ferreira Gaspar - 566785
+- Júlio Mateus Morais - 563850 
 - Marcos Emanuel Alves Dias - 568099
 - Rodrigo Rodrigues de Sousa - 570418
 - Victor Emanuel Silva de Queiroz - 567683

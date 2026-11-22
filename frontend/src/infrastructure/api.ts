@@ -44,6 +44,8 @@ export class ApiClient {
   }
 
   login(email: string, senha: string) { return this.request<Session>('/login', { method: 'POST', body: { email, senha } }); }
+  requestPasswordReset(email: string) { return this.request<void>('/senha/esqueci', { method: 'POST', body: { email } }); }
+  resetPassword(email: string, codigo: string, senha: string) { return this.request<void>('/senha/redefinir', { method: 'POST', body: { email, codigo, senha } }); }
   currentUser(session: Session) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
   reservations(token: string, filters: Filters = {}, signal?: AbortSignal) {

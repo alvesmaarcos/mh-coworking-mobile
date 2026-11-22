@@ -6,6 +6,8 @@ export function createRoutes(usuarioController: ReturnType<typeof createUsuarioC
     const routes = Router();
     routes.post("/usuarios", usuarioController.cadastrar);
     routes.post("/login", usuarioController.login);
+    routes.post("/senha/esqueci", usuarioController.esqueciSenha);
+    routes.post("/senha/redefinir", usuarioController.redefinirSenha);
     routes.get("/usuarios/:id", authMiddleware, usuarioController.buscarPorId);
     routes.put("/usuarios/:id", authMiddleware, usuarioController.atualizar);
     routes.delete("/usuarios/:id", authMiddleware, usuarioController.excluir);

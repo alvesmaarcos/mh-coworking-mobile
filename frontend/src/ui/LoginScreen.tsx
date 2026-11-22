@@ -1,9 +1,9 @@
 import { useRef, useState, type ComponentRef } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from './components/Button';
 import { colors } from './theme';
 
-export function LoginScreen({ onLogin, notice }: { onLogin: (email: string, password: string) => Promise<void>; notice: string }) {
+export function LoginScreen({ onLogin, onForgotPassword, notice }: { onLogin: (email: string, password: string) => Promise<void>; onForgotPassword: () => void; notice: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -38,6 +38,7 @@ export function LoginScreen({ onLogin, notice }: { onLogin: (email: string, pass
       </View>
       {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
       <Button title="Entrar" busy={busy} onPress={() => void submit()} />
+      <Pressable accessibilityRole="link" onPress={onForgotPassword} disabled={busy} style={styles.link}><Text style={styles.linkText}>Esqueci minha senha</Text></Pressable>
     </ScrollView>
   </KeyboardAvoidingView>;
 }
@@ -47,5 +48,6 @@ const styles = StyleSheet.create({
   title: { color: colors.navy, fontSize: 24, fontWeight: '700', marginBottom: 10 }, description: { color: colors.gray, fontSize: 15, lineHeight: 23, marginBottom: 28 },
   field: { marginBottom: 20, gap: 8 }, label: { fontSize: 14, color: colors.navy, fontWeight: '600' },
   input: { borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 14, minHeight: 50, color: colors.navy, fontSize: 16 },
+  link: { alignSelf: 'center', padding: 12, marginTop: 8 }, linkText: { color: colors.navy, fontWeight: '600' },
   error: { color: colors.error, lineHeight: 21, marginBottom: 18 }, notice: { color: colors.navy, padding: 14, backgroundColor: colors.soft, borderRadius: 8, marginBottom: 20 },
 });

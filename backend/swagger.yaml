@@ -110,6 +110,54 @@ paths:
           description: Email e senha são obrigatórios
         '401':
           description: Email ou senha inválidos
+  /senha/esqueci:
+    post:
+      tags: [Usuários]
+      summary: Solicitar código de recuperação de senha
+      description: Envia por email um código de 6 dígitos válido por 15 minutos. Responde 204 mesmo se o email não estiver cadastrado.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+      responses:
+        '204':
+          description: Solicitação recebida
+        '400':
+          description: Email é obrigatório
+  /senha/redefinir:
+    post:
+      tags: [Usuários]
+      summary: Redefinir senha com o código recebido
+      description: O código é de uso único e é invalidado após 5 tentativas erradas.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, codigo, senha]
+              properties:
+                email:
+                  type: string
+                codigo:
+                  type: string
+                  example: '123456'
+                senha:
+                  type: string
+                  minLength: 6
+      responses:
+        '204':
+          description: Senha alterada
+        '400':
+          description: Dados ausentes, senha curta ou código inválido/expirado
   /usuarios/{id}:
     get:
       tags: [Usuários]
