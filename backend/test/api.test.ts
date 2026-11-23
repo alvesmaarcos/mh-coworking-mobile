@@ -66,6 +66,20 @@ test('cadastro e login mantêm contrato, bcrypt e perfis', async () => {
     await request('/usuarios', 'POST', { nome: 'Segundo', email: 'segundo@example.com', senha: '123456' });
     secondClient = (await request('/login', 'POST', { email: 'segundo@example.com', senha: '123456' })).body.token;
 });
+test('preflight cross-origin permite requisições do frontend web', async () => {
+    const response = await fetch(base + '/login', {
+        method: 'OPTIONS',
+        headers: {
+            Origin: 'http://localhost:8082',
+            'Access-Control-Request-Method': 'POST',
+            'Access-Control-Request-Headers': 'content-type',
+        },
+    });
+    assert.equal(response.status, 204);
+    assert.equal(response.headers.get('access-control-allow-origin'), '*');
+    assert.match(response.headers.get('access-control-allow-methods') ?? '', /POST/);
+    assert.match(response.headers.get('access-control-allow-headers') ?? '', /Content-Type/i);
+});
 test('autenticação e propriedade de usuários preservam respostas', async () => {
     assert.deepEqual(await request('/reservas'), { status: 401, body: { erro: 'Token não fornecido' } });
     assert.deepEqual(await request('/reservas', 'GET', undefined, 'invalid'), { status: 401, body: { erro: 'Token inválido ou expirado' } });

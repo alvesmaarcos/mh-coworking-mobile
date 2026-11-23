@@ -7,6 +7,16 @@ export function createApp(routes: Router, paths: {
 }) {
     const app = express();
     const options = { swaggerOptions: { url: '/swagger.yaml' } };
+    app.use((req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        if (req.method === 'OPTIONS') {
+            res.sendStatus(204);
+            return;
+        }
+        next();
+    });
     app.use(express.json());
     app.use('/public', express.static(paths.publicDirectory));
     app.get('/swagger.yaml', (_req, res) => res.sendFile(paths.swaggerFile));
