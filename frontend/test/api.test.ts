@@ -58,3 +58,25 @@ test('busca os detalhes de uma sala pela rota real por id', async () => {
   assert.equal(room.id, 7);
   assert.equal(calls[0].url, 'http://api.test/salas/7');
 });
+test('consulta horários e cria reserva com as rotas e payloads do backend', async () => {
+  const calls: { url: string; init?: RequestInit }[] = [];
+  const api = new ApiClient('http://api.test', undefined, async (input, init) => {
+    calls.push({ url: String(input), init });
+    return Response.json(calls.length === 1
+      ? [{ hora: 8, reservado: false }]
+      : { id: 12, usuario_id: 3, sala_id: 7, data: '2030-01-02', hora: 8, valor: 40 });
+  });
+  const hours = await api.availableHours(7, '2030-01-02');
+  assert.deepEqual(hours, [{ hora: 8, reservado: false }]);
+  assert.equal(calls[0].url, 'http://api.test/salas/7/horarios?data=2030-01-02');
+  const reservation = await api.createReservation('token', {
+    sala_id: 7, data: '2030-01-02', hora: 8,
+  });
+  assert.equal(reservation.id, 12);
+  assert.equal(calls[1].url, 'http://api.test/reservas');
+  assert.equal(calls[1].init?.method, 'POST');
+  assert.equal((calls[1].init?.headers as Record<string, string>).Authorization, 'Bearer token');
+  assert.deepEqual(JSON.parse(String(calls[1].init?.body)), {
+    sala_id: 7, data: '2030-01-02', hora: 8,
+  });
+});

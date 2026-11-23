@@ -38,7 +38,7 @@ export default function App() {
         snapshot.session ? (
           snapshot.session.usuario.tipo === 'ADM'
             ? activeTab === 'rooms'
-              ? <RoomsScreen key={snapshot.session.token} api={api} onNavigate={setActiveTab} />
+              ? <RoomsScreen key={snapshot.session.token} api={api} session={snapshot.session} onNavigate={setActiveTab} />
               : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />
             : <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={logout} />
         ) : recovering ? (

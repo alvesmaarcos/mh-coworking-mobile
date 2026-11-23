@@ -18,5 +18,8 @@ export interface Reservation {
   sala_nome: string;
   usuario_nome: string;
 }
+export interface AvailableHour { hora: number; reservado: boolean }
+export interface ReservationInput { sala_id: number; data: string; hora: number }
+export type CreatedReservation = Omit<Reservation, 'sala_nome' | 'usuario_nome'>;
 export type ReservationTab = 'upcoming' | 'history';
 export interface Filters { roomId?: number; date?: string }

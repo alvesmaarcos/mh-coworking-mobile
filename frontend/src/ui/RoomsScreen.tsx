@@ -9,19 +9,22 @@ import {
   View,
 } from "react-native";
 import { ApiClient } from "../infrastructure/api";
-import type { Room } from "../domain/models";
+import type { Room, Session } from "../domain/models";
 import { filterRooms } from "../domain/rooms";
 import { BottomNavigation, type AppTab } from "./components/BottomNavigation";
 import { Button } from "./components/Button";
 import { RoomCard } from "./components/RoomCard";
 import { RoomDetailsScreen } from "./RoomDetailsScreen";
+import { ReservationScreen } from "./ReservationScreen";
 import { colors } from "./theme";
 
 export function RoomsScreen({
   api,
+  session,
   onNavigate,
 }: {
   api: ApiClient;
+  session: Session;
   onNavigate: (tab: AppTab) => void;
 }) {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -31,6 +34,7 @@ export function RoomsScreen({
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [reservationRoom, setReservationRoom] = useState<Room | null>(null);
   const reload = useCallback(() => setRevision((value) => value + 1), []);
 
   useEffect(() => {
@@ -56,16 +60,25 @@ export function RoomsScreen({
     return () => controller.abort();
   }, [api, revision]);
 
+  if (reservationRoom) {
+    return (
+      <ReservationScreen
+        api={api}
+        token={session.token}
+        room={reservationRoom}
+        onBack={() => setReservationRoom(null)}
+        onConfirmed={() => onNavigate("reservations")}
+      />
+    );
+  }
+
   if (selectedRoom) {
     return (
       <RoomDetailsScreen
         api={api}
         room={selectedRoom}
         onBack={() => setSelectedRoom(null)}
-        onReserve={(room) => {
-          // TODO (Tela 3): implementar o fluxo de reserva para a sala selecionada.
-          void room;
-        }}
+        onReserve={setReservationRoom}
       />
     );
   }
