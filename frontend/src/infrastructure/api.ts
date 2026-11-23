@@ -48,6 +48,7 @@ export class ApiClient {
   resetPassword(email: string, codigo: string, senha: string) { return this.request<void>('/senha/redefinir', { method: 'POST', body: { email, codigo, senha } }); }
   currentUser(session: Session) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
+  room(id: number, signal?: AbortSignal) { return this.request<Room>(`/salas/${id}`, { signal }); }
   assetUrl(path: string | null | undefined) {
     if (!path) return null;
     if (/^https?:\/\//i.test(path)) return path;

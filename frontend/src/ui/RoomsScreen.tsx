@@ -14,6 +14,7 @@ import { filterRooms } from "../domain/rooms";
 import { BottomNavigation, type AppTab } from "./components/BottomNavigation";
 import { Button } from "./components/Button";
 import { RoomCard } from "./components/RoomCard";
+import { RoomDetailsScreen } from "./RoomDetailsScreen";
 import { colors } from "./theme";
 
 export function RoomsScreen({
@@ -29,6 +30,7 @@ export function RoomsScreen({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const reload = useCallback(() => setRevision((value) => value + 1), []);
 
   useEffect(() => {
@@ -53,6 +55,20 @@ export function RoomsScreen({
       });
     return () => controller.abort();
   }, [api, revision]);
+
+  if (selectedRoom) {
+    return (
+      <RoomDetailsScreen
+        api={api}
+        room={selectedRoom}
+        onBack={() => setSelectedRoom(null)}
+        onReserve={(room) => {
+          // TODO (Tela 3): implementar o fluxo de reserva para a sala selecionada.
+          void room;
+        }}
+      />
+    );
+  }
 
   const visibleRooms = filterRooms(rooms, query);
   return (
@@ -83,7 +99,11 @@ export function RoomsScreen({
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={Separator}
         renderItem={({ item }) => (
-          <RoomCard room={item} imageUrl={api.assetUrl(item.imagem_url)} />
+          <RoomCard
+            room={item}
+            imageUrl={api.assetUrl(item.imagem_url)}
+            onPress={() => setSelectedRoom(item)}
+          />
         )}
         refreshing={loading}
         onRefresh={reload}

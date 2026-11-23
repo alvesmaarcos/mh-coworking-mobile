@@ -34,3 +34,13 @@ test('resolve URLs das imagens no mesmo host da API e mantém URLs absolutas', (
   assert.equal(new ApiClient('https://api.test/api/').assetUrl('/public/sala.jpeg'), 'https://api.test/public/sala.jpeg');
   assert.equal(new ApiClient('https://api.test').assetUrl('https://cdn.test/sala.jpeg'), 'https://cdn.test/sala.jpeg');
 });
+test('busca os detalhes de uma sala pela rota real por id', async () => {
+  const calls: { url: string }[] = [];
+  const api = new ApiClient('http://api.test', undefined, async (input) => {
+    calls.push({ url: String(input) });
+    return Response.json({ id: 7, nome: 'Sala 7' });
+  });
+  const room = await api.room(7);
+  assert.equal(room.id, 7);
+  assert.equal(calls[0].url, 'http://api.test/salas/7');
+});

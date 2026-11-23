@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import Feather from '@expo/vector-icons/Feather';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Room } from '../../domain/models';
 import { formatPrice } from '../../domain/reservations';
 import { colors } from '../theme';
 
-export function RoomCard({ room, imageUrl }: { room: Room; imageUrl: string | null }) {
+export function RoomCard({ room, imageUrl, onPress }: { room: Room; imageUrl: string | null; onPress?: () => void }) {
   const [imageFailed, setImageFailed] = useState(false);
   const attributes = (room.atributos ?? '').split(',').map(value => value.trim()).filter(Boolean);
-  return <View style={styles.card}>
+  return <Pressable accessibilityRole="button" accessibilityLabel={`Ver detalhes de ${room.nome}`} onPress={onPress} disabled={!onPress}
+    style={({ pressed }) => [styles.card, pressed && onPress ? styles.pressed : null]}>
     {imageUrl && !imageFailed
-      ? <Image accessibilityLabel={`Foto de ${room.nome}`} source={{ uri: imageUrl }} onError={() => setImageFailed(true)} style={styles.image} />
+      ? <Image accessibilityRole="image" accessibilityLabel={`Foto de ${room.nome}`} source={{ uri: imageUrl }} onError={() => setImageFailed(true)} style={styles.image} />
       : <View style={[styles.image, styles.imageFallback]}><Feather name="image" size={26} color={colors.gray} /></View>}
     <View style={styles.content}>
       <Text style={styles.name}>{room.nome}</Text>
@@ -21,7 +22,7 @@ export function RoomCard({ room, imageUrl }: { room: Room; imageUrl: string | nu
         <Text style={styles.price}>{formatPrice(room.valor_hora)}</Text><Text style={styles.perHour}>/h</Text>
       </View> : null}
     </View>
-  </View>;
+  </Pressable>;
 }
 
 const styles = StyleSheet.create({
@@ -29,13 +30,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 10,
     padding: 4,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 3,
     elevation: 3,
   },
-  image: { width: '100%', height: 82, borderRadius: 7, backgroundColor: '#ECECF0' },
+  pressed: { opacity: 0.75 },
+  image: { width: '100%', height: 82, borderRadius: 7, backgroundColor: colors.surface },
   imageFallback: { alignItems: 'center', justifyContent: 'center' },
   content: { paddingHorizontal: 4, paddingTop: 6, paddingBottom: 2 },
   name: { color: colors.navy, fontSize: 13, lineHeight: 17, fontWeight: '700' },
