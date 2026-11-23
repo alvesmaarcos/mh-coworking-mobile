@@ -78,6 +78,12 @@ export class SessionStore {
     }
     await this.applySession(generation, session);
   }
+  async updateUser(user: User) {
+    const current = this.snapshot.session;
+    if (!current || current.usuario.id !== user.id) return;
+    const generation = this.generation;
+    await this.applySession(generation, { ...current, usuario: user });
+  }
   async logout(notice = '') {
     ++this.generation;
     this.update({ session: null, restoring: false, notice });

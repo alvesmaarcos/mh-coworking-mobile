@@ -1,4 +1,5 @@
 export interface User { id: number; nome: string; email: string; tipo: 'ADM' | 'CLIENTE' }
+export interface UpdateUserInput { nome: string; email: string; senha?: string }
 export interface Session { usuario: User; token: string }
 export interface Room {
   id: number;

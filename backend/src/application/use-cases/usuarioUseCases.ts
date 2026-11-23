@@ -47,9 +47,10 @@ export function createUsuarioUseCases(usuarioRepository: UsuarioRepository, pass
         }
         return usuario;
     }
-    async function atualizar(id: Id, { nome, email }: {
+    async function atualizar(id: Id, { nome, email, senha }: {
         nome: string;
         email: string;
+        senha?: string;
     }, autenticado: UsuarioAutenticado) {
         verificarDono(id, autenticado);
         const usuario = usuarioRepository.buscarPorId(id);
@@ -62,11 +63,17 @@ export function createUsuarioUseCases(usuarioRepository: UsuarioRepository, pass
         if (!email.includes("@")) {
             throw new DomainError("Email inválido", "validation");
         }
+        if (senha !== undefined && senha !== "" && senha.length < 6) {
+            throw new DomainError("A senha deve conter pelo menos seis caracteres", "validation");
+        }
         const emailEmUso = usuarioRepository.buscarPorEmail(email);
         if (emailEmUso && emailEmUso.id !== Number(id)) {
             throw new DomainError("Já existe um usuário cadastrado com este email", "conflict");
         }
         usuarioRepository.atualizar(id, { nome, email });
+        if (senha) {
+            usuarioRepository.atualizarSenha(id, await passwords.hash(senha));
+        }
         return usuarioRepository.buscarPorId(id)!;
     }
     async function excluir(id: Id, autenticado: UsuarioAutenticado) {

@@ -80,3 +80,22 @@ test('consulta horários e cria reserva com as rotas e payloads do backend', asy
     sala_id: 7, data: '2030-01-02', hora: 8,
   });
 });
+test('atualiza e exclui usuário com rotas, método e token corretos', async () => {
+  const calls: { url: string; init?: RequestInit }[] = [];
+  const api = new ApiClient('http://api.test', undefined, async (input, init) => {
+    calls.push({ url: String(input), init });
+    return init?.method === 'DELETE'
+      ? new Response(null, { status: 204 })
+      : Response.json({ id: 5, nome: 'Anna Updated', email: 'anna2@example.com', tipo: 'CLIENTE' });
+  });
+  const updated = await api.updateUser('token', 5, { nome: 'Anna Updated', email: 'anna2@example.com', senha: 'nova123' });
+  assert.equal(updated.nome, 'Anna Updated');
+  assert.equal(calls[0].url, 'http://api.test/usuarios/5');
+  assert.equal(calls[0].init?.method, 'PUT');
+  assert.equal((calls[0].init?.headers as Record<string, string>).Authorization, 'Bearer token');
+  assert.deepEqual(JSON.parse(String(calls[0].init?.body)), { nome: 'Anna Updated', email: 'anna2@example.com', senha: 'nova123' });
+  await api.deleteUser('token', 5);
+  assert.equal(calls[1].url, 'http://api.test/usuarios/5');
+  assert.equal(calls[1].init?.method, 'DELETE');
+  assert.equal((calls[1].init?.headers as Record<string, string>).Authorization, 'Bearer token');
+});

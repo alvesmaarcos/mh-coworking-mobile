@@ -92,6 +92,13 @@ test('autenticação e propriedade de usuários preservam respostas', async () =
     const updated = await request(`/usuarios/${userId}`, 'PUT', { nome: 'Atualizado', email: 'cliente@example.com' }, client);
     assert.equal(updated.status, 200);
     assert.equal(updated.body.nome, 'Atualizado');
+    assert.equal((await request(`/usuarios/${userId}`, 'PUT', { nome: 'Atualizado', email: 'cliente@example.com', senha: '123' }, client)).status, 400);
+    const updatedPassword = await request(`/usuarios/${userId}`, 'PUT', { nome: 'Atualizado', email: 'cliente@example.com', senha: 'nova123' }, client);
+    assert.equal(updatedPassword.status, 200);
+    assert.equal(updatedPassword.body.senha, undefined);
+    assert.equal((await request('/login', 'POST', { email: 'cliente@example.com', senha: '123456' })).status, 401);
+    assert.equal((await request('/login', 'POST', { email: 'cliente@example.com', senha: 'nova123' })).status, 200);
+    await request(`/usuarios/${userId}`, 'PUT', { nome: 'Atualizado', email: 'cliente@example.com', senha: '123456' }, client);
 });
 test('salas públicas e alterações restritas ao administrador', async () => {
     const input = { nome: 'Sala teste', descricao: 'Descrição', atributos: 'Wi-Fi', valor_hora: '30', imagem_url: '/public/copa-1.jpeg' };

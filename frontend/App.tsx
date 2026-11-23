@@ -10,6 +10,7 @@ import { ApiClient } from './src/infrastructure/api';
 import { ClientHomeScreen } from './src/ui/ClientHomeScreen';
 import { LoginScreen } from './src/ui/LoginScreen';
 import { PasswordRecoveryScreen } from './src/ui/PasswordRecoveryScreen';
+import { ProfileScreen } from './src/ui/ProfileScreen';
 import { ReservationsScreen } from './src/ui/ReservationsScreen';
 import { RoomsScreen } from './src/ui/RoomsScreen';
 import type { AppTab } from './src/ui/components/BottomNavigation';
@@ -27,20 +28,34 @@ export default function App() {
   const [recoveryNotice, setRecoveryNotice] = useState('');
   const [activeTab, setActiveTab] = useState<AppTab>('rooms');
   useEffect(() => { void auth.restore(); }, [auth]);
-  function logout() {
+  useEffect(() => { if (!snapshot.session) setActiveTab('rooms'); }, [snapshot.session]);
+  function logout(notice = '') {
     setActiveTab('rooms');
-    void auth.logout();
+    void auth.logout(notice);
   }
   return <SafeAreaProvider>
     <StatusBar style="dark" />
     <View style={styles.background}><SafeAreaView edges={['top', 'left', 'right']} style={styles.app}>
       {snapshot.restoring || (!fontsLoaded && !fontError) ? <View style={styles.loading}><ActivityIndicator color={colors.navy} /><Text style={styles.loadingText}>Carregando…</Text></View> :
         snapshot.session ? (
-          snapshot.session.usuario.tipo === 'ADM'
-            ? activeTab === 'rooms'
+          activeTab === 'profile' ? (
+            <ProfileScreen
+              key={snapshot.session.token}
+              api={api}
+              session={snapshot.session}
+              onUserUpdated={user => auth.updateUser(user)}
+              onLogout={() => logout()}
+              onAccountDeleted={() => logout('Conta excluída com sucesso.')}
+              onNavigate={setActiveTab}
+              disabledTabs={snapshot.session.usuario.tipo === 'CLIENTE' ? ['reservations'] : []}
+            />
+          ) : snapshot.session.usuario.tipo === 'ADM' ? (
+            activeTab === 'rooms'
               ? <RoomsScreen key={snapshot.session.token} api={api} session={snapshot.session} onNavigate={setActiveTab} />
-              : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />
-            : <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={logout} />
+              : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
+          ) : (
+            <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
+          )
         ) : recovering ? (
           <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />
         ) : (

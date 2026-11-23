@@ -1,4 +1,4 @@
-import type { AvailableHour, CreatedReservation, Filters, Reservation, ReservationInput, Room, Session, User } from '../domain/models';
+import type { AvailableHour, CreatedReservation, Filters, Reservation, ReservationInput, Room, Session, UpdateUserInput, User } from '../domain/models';
 
 export class ApiError extends Error {
   constructor(message: string, public readonly status: number) { super(message); }
@@ -47,7 +47,9 @@ export class ApiClient {
   login(email: string, senha: string) { return this.request<Session>('/login', { method: 'POST', body: { email, senha } }); }
   requestPasswordReset(email: string) { return this.request<void>('/senha/esqueci', { method: 'POST', body: { email } }); }
   resetPassword(email: string, codigo: string, senha: string) { return this.request<void>('/senha/redefinir', { method: 'POST', body: { email, codigo, senha } }); }
-  currentUser(session: Session) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token }); }
+  currentUser(session: Session, signal?: AbortSignal) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token, signal }); }
+  updateUser(token: string, id: number, data: UpdateUserInput) { return this.request<User>(`/usuarios/${id}`, { token, method: 'PUT', body: data }); }
+  deleteUser(token: string, id: number) { return this.request<void>(`/usuarios/${id}`, { token, method: 'DELETE' }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
   room(id: number, signal?: AbortSignal) { return this.request<Room>(`/salas/${id}`, { signal }); }
   availableHours(roomId: number, date: string, signal?: AbortSignal) {

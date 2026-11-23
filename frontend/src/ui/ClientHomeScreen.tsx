@@ -1,13 +1,20 @@
 import Feather from '@expo/vector-icons/Feather';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Session } from '../domain/models';
+import { BottomNavigation, type AppTab } from './components/BottomNavigation';
 import { colors } from './theme';
 
 const logo = require('../../assets/logo.png');
 
-export function ClientHomeScreen({ session, onLogout }: { session: Session; onLogout: () => void }) {
-  const insets = useSafeAreaInsets();
+export function ClientHomeScreen({
+  session,
+  onLogout,
+  onNavigate,
+}: {
+  session: Session;
+  onLogout: () => void;
+  onNavigate: (tab: AppTab) => void;
+}) {
   return <View style={styles.page}>
     <View style={styles.header}>
       <View style={styles.brandRow}>
@@ -27,24 +34,11 @@ export function ClientHomeScreen({ session, onLogout }: { session: Session; onLo
         <Text style={styles.greeting}>Olá, {session.usuario.nome}!</Text>
         <Text style={styles.email}>{session.usuario.email}</Text>
         <Text style={styles.description}>
-          Sua conta está autenticada com acesso de cliente. As telas de salas, reservas e perfil do cliente serão integradas aqui nas próximas etapas.
+          Sua conta está autenticada com acesso de cliente. As telas de salas e reservas do cliente serão integradas aqui nas próximas etapas.
         </Text>
       </View>
     </View>
-    <View style={[styles.navigation, { paddingBottom: Math.max(insets.bottom, 8) }]}>
-      <View accessibilityLabel="Salas, indisponível nesta etapa" accessibilityState={{ disabled: true }} style={styles.navItem}>
-        <Feather name="home" size={23} color={colors.gray} />
-        <Text style={styles.navText}>Salas</Text>
-      </View>
-      <View accessibilityLabel="Minhas reservas, indisponível nesta etapa" accessibilityState={{ disabled: true }} style={styles.navItem}>
-        <Feather name="calendar" size={24} color={colors.gray} />
-        <Text style={styles.navText}>Reservas</Text>
-      </View>
-      <View accessibilityLabel="Perfil, indisponível nesta etapa" accessibilityState={{ disabled: true }} style={styles.navItem}>
-        <Feather name="user" size={24} color={colors.gray} />
-        <Text style={styles.navText}>Perfil</Text>
-      </View>
-    </View>
+    <BottomNavigation active="rooms" onSelect={onNavigate} disabledTabs={['reservations']} />
   </View>;
 }
 
@@ -63,7 +57,4 @@ const styles = StyleSheet.create({
   greeting: { color: colors.navy, fontSize: 22, fontWeight: '700', marginTop: 4 },
   email: { color: colors.muted, fontSize: 14 },
   description: { color: colors.gray, fontSize: 14, lineHeight: 22, marginTop: 4 },
-  navigation: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#C7C7C7', paddingTop: 12, backgroundColor: colors.white },
-  navItem: { flex: 1, minHeight: 43, alignItems: 'center', gap: 4 },
-  navText: { fontSize: 9, fontWeight: '600', color: colors.gray },
 });

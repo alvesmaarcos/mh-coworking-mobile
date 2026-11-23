@@ -104,3 +104,14 @@ test('resposta de login atrasada não reabre sessão após sair', async () => {
   assert.equal(auth.getSnapshot().session, null);
   assert.equal(await memory.read(), null);
 });
+test('updateUser atualiza sessão em memória e no armazenamento sem alterar token', async () => {
+  const memory = storage(JSON.stringify(clientSession));
+  const auth = new SessionStore(memory);
+  await auth.restore();
+  await auth.updateUser({ id: 2, nome: 'Anna Beatryz', email: 'anna@example.com', tipo: 'CLIENTE' });
+  assert.deepEqual(auth.getSnapshot().session, {
+    token: 'client-token',
+    usuario: { id: 2, nome: 'Anna Beatryz', email: 'anna@example.com', tipo: 'CLIENTE' },
+  });
+  assert.equal(await memory.read(), JSON.stringify(auth.getSnapshot().session));
+});

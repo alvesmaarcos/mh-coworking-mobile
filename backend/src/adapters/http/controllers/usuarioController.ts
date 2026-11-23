@@ -36,7 +36,7 @@ export function createUsuarioController(usuarioService: ReturnType<typeof create
     }
     async function atualizar(req: Request, res: Response, next: NextFunction) {
         try {
-            const usuario = await usuarioService.atualizar(req.params.id as string, req.body, obterUsuario(req));
+            const usuario = await usuarioService.atualizar(req.params.id as string, req.body ?? {}, obterUsuario(req));
             delete usuario.senha;
             res.status(200).json(usuario);
         }

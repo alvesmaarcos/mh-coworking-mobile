@@ -39,6 +39,9 @@ components:
           type: string
         email:
           type: string
+        senha:
+          type: string
+          minLength: 6
 security:
   - bearerAuth: []
 tags:
