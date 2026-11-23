@@ -29,3 +29,8 @@ test('erros de API preservam mensagem e falha de rede permite nova tentativa', a
   const offline = new ApiClient('http://api.test', undefined, async () => { throw new TypeError('Failed to fetch'); });
   await assert.rejects(offline.rooms(), /Verifique sua conexão/);
 });
+test('resolve URLs das imagens no mesmo host da API e mantém URLs absolutas', () => {
+  assert.equal(new ApiClient('/api').assetUrl('/public/sala.jpeg'), '/api/public/sala.jpeg');
+  assert.equal(new ApiClient('https://api.test/api/').assetUrl('/public/sala.jpeg'), 'https://api.test/public/sala.jpeg');
+  assert.equal(new ApiClient('https://api.test').assetUrl('https://cdn.test/sala.jpeg'), 'https://cdn.test/sala.jpeg');
+});
