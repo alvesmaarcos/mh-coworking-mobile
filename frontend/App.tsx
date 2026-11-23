@@ -7,6 +7,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { SessionStore } from './src/application/session';
 import { sessionStorage } from './src/infrastructure/storage';
 import { ApiClient } from './src/infrastructure/api';
+import { ClientHomeScreen } from './src/ui/ClientHomeScreen';
 import { LoginScreen } from './src/ui/LoginScreen';
 import { PasswordRecoveryScreen } from './src/ui/PasswordRecoveryScreen';
 import { ReservationsScreen } from './src/ui/ReservationsScreen';
@@ -34,6 +35,16 @@ export default function App() {
     <StatusBar style="dark" />
     <View style={styles.background}><SafeAreaView edges={['top', 'left', 'right']} style={styles.app}>
       {snapshot.restoring || (!fontsLoaded && !fontError) ? <View style={styles.loading}><ActivityIndicator color={colors.navy} /><Text style={styles.loadingText}>Carregando…</Text></View> :
+        snapshot.session ? (
+          snapshot.session.usuario.tipo === 'ADM'
+            ? <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => void auth.logout()} />
+            : <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={() => void auth.logout()} />
+        ) :
+          <LoginScreen
+            onLogin={(email, password) => auth.login(api, email, password)}
+            onRegister={(name, email, password) => auth.register(api, name, email, password)}
+            notice={snapshot.notice}
+          />}
         snapshot.session ? activeTab === 'rooms'
           ? <RoomsScreen key={snapshot.session.token} api={api} onNavigate={setActiveTab} />
           : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />

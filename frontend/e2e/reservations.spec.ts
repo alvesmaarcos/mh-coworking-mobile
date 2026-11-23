@@ -118,13 +118,18 @@ test('falhas de consulta e cancelamento permitem tentar novamente', async ({ pag
   await expect(cancelButtons(page)).toHaveCount(2);
 });
 
+test('separa área de CLIENTE e ADM, valida credenciais erradas e expira 401', async ({ page }) => {
+  await login(page, 'admin@montehorebe.com', 'wrong');
 test('rejeita CLIENTE e credenciais erradas; 401 exige novo login', async ({ page }) => {
   await login(page, 'admin@montehorebe.com', 'wrong', false);
   await expect(page.getByText('Email ou senha inválidos')).toBeVisible();
   await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('cliente@example.com');
   await page.getByLabel('Senha', { exact: true }).fill('123456');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect(page.getByText(/Esta área é exclusiva para administradores/)).toBeVisible();
+  await expect(page.getByText('Área do cliente', { exact: true })).toBeVisible();
+  await expect(cancelButtons(page)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Sair da conta' }).click();
+  await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
   await login(page);
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.route('**/api/reservas', route => route.fulfill({ status: 401, json: { erro: 'Token inválido ou expirado' } }));
@@ -133,6 +138,25 @@ test('rejeita CLIENTE e credenciais erradas; 401 exige novo login', async ({ pag
   await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(page.getByText('Sua sessão expirou. Entre novamente.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
+});
+
+test('cadastro cria nova conta e realiza login automático na área do cliente', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('auth-entrar.png'), fullPage: true });
+  await page.getByRole('tab', { name: 'Criar conta', exact: true }).click();
+  await expect(page.getByRole('textbox', { name: 'Nome completo', exact: true })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('auth-criar-conta.png'), fullPage: true });
+  await page.getByRole('textbox', { name: 'Nome completo', exact: true }).fill('Anna Beatryz');
+  await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('anna@example.com');
+  await page.getByLabel('Senha', { exact: true }).fill('123456');
+  await page.getByRole('button', { name: 'Criar conta', exact: true }).click();
+  await expect(page.getByText('Área do cliente', { exact: true })).toBeVisible();
+  await expect(page.getByText('Olá, Anna Beatryz!', { exact: true })).toBeVisible();
+  await expect(cancelButtons(page)).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByText('Olá, Anna Beatryz!', { exact: true })).toBeVisible();
 });
 
 test('tela pequena mantém navegação fixa, lista rolável e calendário utilizável', async ({ page }, testInfo) => {

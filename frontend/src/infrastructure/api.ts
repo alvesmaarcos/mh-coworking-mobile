@@ -43,6 +43,7 @@ export class ApiClient {
     }
   }
 
+  register(nome: string, email: string, senha: string) { return this.request<User>('/usuarios', { method: 'POST', body: { nome, email, senha } }); }
   login(email: string, senha: string) { return this.request<Session>('/login', { method: 'POST', body: { email, senha } }); }
   requestPasswordReset(email: string) { return this.request<void>('/senha/esqueci', { method: 'POST', body: { email } }); }
   resetPassword(email: string, codigo: string, senha: string) { return this.request<void>('/senha/redefinir', { method: 'POST', body: { email, codigo, senha } }); }

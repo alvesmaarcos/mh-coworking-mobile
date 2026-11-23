@@ -12,6 +12,7 @@ backend.db.exec(`INSERT INTO salas (id, nome, descricao, atributos, valor_hora, 
   (2, 'Sala Grande', 'Espaço para reuniões.', 'TV ampla, Espaçosa', 50, '/public/sala-grande-1.jpeg')`);
 function reset() {
   backend.db.exec('DELETE FROM reservas');
+  backend.db.exec('DELETE FROM usuarios WHERE id > 2');
   const insert = backend.db.prepare('INSERT INTO reservas (id, usuario_id, sala_id, data, hora, valor) VALUES (?, 2, ?, ?, ?, ?)');
   insert.run(1, 1, '2030-01-03', 10, 20);
   insert.run(2, 1, '2030-01-04', 10, 20);

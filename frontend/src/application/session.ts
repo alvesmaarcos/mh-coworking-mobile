@@ -1,4 +1,4 @@
-import type { Session } from '../domain/models';
+import type { Session, User } from '../domain/models';
 
 export interface SessionStorage {
   read(): Promise<string | null>;
@@ -6,13 +6,25 @@ export interface SessionStorage {
   clear(): Promise<void>;
 }
 export interface AuthApi { login(email: string, password: string): Promise<Session> }
+export interface RegisterApi extends AuthApi { register(name: string, email: string, password: string): Promise<User> }
 export interface AuthSnapshot { session: Session | null; restoring: boolean; notice: string }
+
+export class RegistrationLoginError extends Error {
+  constructor(message = 'Conta criada com sucesso, mas não foi possível entrar automaticamente. Faça login para continuar.') {
+    super(message);
+    this.name = 'RegistrationLoginError';
+  }
+}
+
+function isValidRole(tipo: unknown): tipo is User['tipo'] {
+  return tipo === 'ADM' || tipo === 'CLIENTE';
+}
 
 export function parseSession(raw: string | null): Session | null {
   if (!raw) return null;
   try {
     const session = JSON.parse(raw) as Session;
-    if (typeof session.token !== 'string' || !session.token || session.usuario?.tipo !== 'ADM' ||
+    if (typeof session.token !== 'string' || !session.token || !isValidRole(session.usuario?.tipo) ||
       !Number.isInteger(session.usuario.id) || typeof session.usuario.nome !== 'string' || typeof session.usuario.email !== 'string') return null;
     return session;
   } catch { return null; }
@@ -31,6 +43,12 @@ export class SessionStore {
     this.storageQueue = this.storageQueue.catch(() => {}).then(action);
     return this.storageQueue;
   }
+  private async applySession(generation: number, session: Session) {
+    if (generation !== this.generation) return;
+    if (!isValidRole(session.usuario?.tipo)) throw new Error('Perfil de usuário inválido.');
+    await this.persist(() => this.storage.write(JSON.stringify(session)));
+    if (generation === this.generation) this.update({ session, restoring: false, notice: '' });
+  }
   async restore() {
     const generation = ++this.generation;
     let session: Session | null = null;
@@ -45,10 +63,20 @@ export class SessionStore {
   async login(api: AuthApi, email: string, password: string) {
     const generation = ++this.generation;
     const session = await api.login(email.trim(), password);
+    await this.applySession(generation, session);
+  }
+  async register(api: RegisterApi, name: string, email: string, password: string) {
+    const generation = ++this.generation;
+    const cleanEmail = email.trim();
+    await api.register(name.trim(), cleanEmail, password);
     if (generation !== this.generation) return;
-    if (session.usuario.tipo !== 'ADM') throw new Error('Esta área é exclusiva para administradores. Entre com uma conta ADM.');
-    await this.persist(() => this.storage.write(JSON.stringify(session)));
-    if (generation === this.generation) this.update({ session, restoring: false, notice: '' });
+    let session: Session;
+    try {
+      session = await api.login(cleanEmail, password);
+    } catch {
+      throw new RegistrationLoginError();
+    }
+    await this.applySession(generation, session);
   }
   async logout(notice = '') {
     ++this.generation;
