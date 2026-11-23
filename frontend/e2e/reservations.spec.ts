@@ -119,8 +119,6 @@ test('falhas de consulta e cancelamento permitem tentar novamente', async ({ pag
 });
 
 test('separa área de CLIENTE e ADM, valida credenciais erradas e expira 401', async ({ page }) => {
-  await login(page, 'admin@montehorebe.com', 'wrong');
-test('rejeita CLIENTE e credenciais erradas; 401 exige novo login', async ({ page }) => {
   await login(page, 'admin@montehorebe.com', 'wrong', false);
   await expect(page.getByText('Email ou senha inválidos')).toBeVisible();
   await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('cliente@example.com');

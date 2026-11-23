@@ -37,19 +37,20 @@ export default function App() {
       {snapshot.restoring || (!fontsLoaded && !fontError) ? <View style={styles.loading}><ActivityIndicator color={colors.navy} /><Text style={styles.loadingText}>Carregando…</Text></View> :
         snapshot.session ? (
           snapshot.session.usuario.tipo === 'ADM'
-            ? <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => void auth.logout()} />
-            : <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={() => void auth.logout()} />
-        ) :
+            ? activeTab === 'rooms'
+              ? <RoomsScreen key={snapshot.session.token} api={api} onNavigate={setActiveTab} />
+              : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />
+            : <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={logout} />
+        ) : recovering ? (
+          <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />
+        ) : (
           <LoginScreen
             onLogin={(email, password) => auth.login(api, email, password)}
             onRegister={(name, email, password) => auth.register(api, name, email, password)}
-            notice={snapshot.notice}
-          />}
-        snapshot.session ? activeTab === 'rooms'
-          ? <RoomsScreen key={snapshot.session.token} api={api} onNavigate={setActiveTab} />
-          : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />
-          : recovering ? <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />
-            : <LoginScreen onLogin={(email, password) => auth.login(api, email, password)} onForgotPassword={() => { setRecoveryNotice(''); setRecovering(true); }} notice={recoveryNotice || snapshot.notice} />}
+            onForgotPassword={() => { setRecoveryNotice(''); setRecovering(true); }}
+            notice={recoveryNotice || snapshot.notice}
+          />
+        )}
     </SafeAreaView></View>
   </SafeAreaProvider>;
 }

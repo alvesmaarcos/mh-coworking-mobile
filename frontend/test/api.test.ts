@@ -42,6 +42,7 @@ test('cadastro envia POST /usuarios com nome, email e senha e preserva erro de c
   assert.deepEqual(JSON.parse(String(calls[0].init?.body)), { nome: 'Ana', email: 'ana@example.com', senha: '123456' });
   const conflict = new ApiClient('http://api.test', undefined, async () => Response.json({ erro: 'Já existe um usuário cadastrado com este email' }, { status: 409 }));
   await assert.rejects(conflict.register('Ana', 'ana@example.com', '123456'), error => error instanceof ApiError && error.status === 409 && /este email/.test(error.message));
+});
 test('resolve URLs das imagens no mesmo host da API e mantém URLs absolutas', () => {
   assert.equal(new ApiClient('/api').assetUrl('/public/sala.jpeg'), '/api/public/sala.jpeg');
   assert.equal(new ApiClient('https://api.test/api/').assetUrl('/public/sala.jpeg'), 'https://api.test/public/sala.jpeg');
