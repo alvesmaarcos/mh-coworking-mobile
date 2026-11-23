@@ -1,16 +1,43 @@
 import { test, expect, type Page } from '@playwright/test';
 
-async function login(page: Page, email = 'admin@montehorebe.com', password = 'admin123') {
+async function login(page: Page, email = 'admin@montehorebe.com', password = 'admin123', openReservations = true) {
   await page.goto('/');
   await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill(email);
   await page.getByLabel('Senha', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  if (openReservations) await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
 }
 const cancelButtons = (page: Page) => page.getByRole('button', { name: /^Cancelar reserva de/ });
 
 test.beforeEach(async ({ page, request }) => {
   await request.post('http://127.0.0.1:4199/__test/reset');
   await page.clock.setFixedTime(new Date('2030-01-01T15:00:00Z'));
+});
+
+test('lista espaços, busca por nome e navega para reservas', async ({ page }) => {
+  await login(page, undefined, undefined, false);
+  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await expect(page.getByText('Sala Individual', { exact: true })).toBeVisible();
+  await expect(page.getByText('Sala Grande', { exact: true })).toBeVisible();
+  const search = page.getByRole('textbox', { name: 'Buscar sala' });
+  const searchBorder = () => search.evaluate(element => getComputedStyle(element.parentElement!).borderColor);
+  expect(await searchBorder()).toBe('rgb(216, 216, 216)');
+  await search.click();
+  expect(await searchBorder()).toBe('rgb(255, 100, 31)');
+  expect(await search.evaluate(element => getComputedStyle(element).outlineWidth)).toBe('0px');
+  const images = page.locator('img');
+  await expect(images).toHaveCount(2);
+  await expect(images.first()).toHaveJSProperty('complete', true);
+  expect(await images.first().evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await search.fill('grande');
+  await search.evaluate(element => element.blur());
+  expect(await searchBorder()).toBe('rgb(216, 216, 216)');
+  await expect(page.getByText('Sala Grande', { exact: true })).toBeVisible();
+  await expect(page.getByText('Sala Individual', { exact: true })).toHaveCount(0);
+  await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
+  await expect(cancelButtons(page)).toHaveCount(3);
+  await page.getByRole('tab', { name: 'Salas', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
 });
 
 test('abas seguem as referências e sessão é restaurada após recarregar', async ({ page }, testInfo) => {
@@ -25,6 +52,8 @@ test('abas seguem as referências e sessão é restaurada após recarregar', asy
   await expect(cancelButtons(page)).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('reservas-historico.png'), fullPage: true });
   await page.reload();
+  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.getByRole('button', { name: 'Sair da conta' }).click();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
@@ -90,7 +119,7 @@ test('falhas de consulta e cancelamento permitem tentar novamente', async ({ pag
 });
 
 test('rejeita CLIENTE e credenciais erradas; 401 exige novo login', async ({ page }) => {
-  await login(page, 'admin@montehorebe.com', 'wrong');
+  await login(page, 'admin@montehorebe.com', 'wrong', false);
   await expect(page.getByText('Email ou senha inválidos')).toBeVisible();
   await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('cliente@example.com');
   await page.getByLabel('Senha', { exact: true }).fill('123456');
@@ -100,6 +129,8 @@ test('rejeita CLIENTE e credenciais erradas; 401 exige novo login', async ({ pag
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.route('**/api/reservas', route => route.fulfill({ status: 401, json: { erro: 'Token inválido ou expirado' } }));
   await page.reload();
+  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(page.getByText('Sua sessão expirou. Entre novamente.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();
 });
