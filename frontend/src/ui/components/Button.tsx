@@ -7,6 +7,12 @@ export function Button({ title, onPress, busy = false, secondary = false, accent
   return <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityState={{ disabled: disabled || busy, busy }}
     disabled={disabled || busy} onPress={onPress} style={({ pressed }) => [styles.button, accent && styles.accent, secondary && styles.secondary, (pressed || disabled || busy) && styles.dim]}>
     {busy ? <ActivityIndicator color={secondary ? colors.navy : colors.white} /> : <Text style={[styles.label, accent && styles.accentLabel, secondary && styles.secondaryLabel]}>{title}</Text>}
+export function Button({ title, onPress, busy = false, secondary = false, orange = false, disabled = false }: {
+  title: string; onPress: () => void; busy?: boolean; secondary?: boolean; orange?: boolean; disabled?: boolean;
+}) {
+  return <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityState={{ disabled: disabled || busy, busy }}
+    disabled={disabled || busy} onPress={onPress} style={({ pressed }) => [styles.button, secondary && styles.secondary, orange && styles.orange, (pressed || disabled || busy) && styles.dim]}>
+    {busy ? <ActivityIndicator color={secondary ? colors.navy : colors.white} /> : <Text style={[styles.label, secondary && styles.secondaryLabel]}>{title}</Text>}
   </Pressable>;
 }
 const styles = StyleSheet.create({
@@ -17,4 +23,6 @@ const styles = StyleSheet.create({
   accentLabel: { fontSize: 16, fontWeight: '700' },
   secondaryLabel: { color: colors.navy },
   dim: { opacity: 0.6 },
+  orange: { backgroundColor: colors.orange },
+  label: { color: colors.white, fontSize: 15, fontWeight: '600' }, secondaryLabel: { color: colors.navy }, dim: { opacity: 0.6 },
 });

@@ -42,4 +42,18 @@ test('cadastro envia POST /usuarios com nome, email e senha e preserva erro de c
   assert.deepEqual(JSON.parse(String(calls[0].init?.body)), { nome: 'Ana', email: 'ana@example.com', senha: '123456' });
   const conflict = new ApiClient('http://api.test', undefined, async () => Response.json({ erro: 'Já existe um usuário cadastrado com este email' }, { status: 409 }));
   await assert.rejects(conflict.register('Ana', 'ana@example.com', '123456'), error => error instanceof ApiError && error.status === 409 && /este email/.test(error.message));
+test('resolve URLs das imagens no mesmo host da API e mantém URLs absolutas', () => {
+  assert.equal(new ApiClient('/api').assetUrl('/public/sala.jpeg'), '/api/public/sala.jpeg');
+  assert.equal(new ApiClient('https://api.test/api/').assetUrl('/public/sala.jpeg'), 'https://api.test/public/sala.jpeg');
+  assert.equal(new ApiClient('https://api.test').assetUrl('https://cdn.test/sala.jpeg'), 'https://cdn.test/sala.jpeg');
+});
+test('busca os detalhes de uma sala pela rota real por id', async () => {
+  const calls: { url: string }[] = [];
+  const api = new ApiClient('http://api.test', undefined, async (input) => {
+    calls.push({ url: String(input) });
+    return Response.json({ id: 7, nome: 'Sala 7' });
+  });
+  const room = await api.room(7);
+  assert.equal(room.id, 7);
+  assert.equal(calls[0].url, 'http://api.test/salas/7');
 });

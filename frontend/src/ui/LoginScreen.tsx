@@ -19,6 +19,11 @@ export function LoginScreen({
 }) {
   const [mode, setMode] = useState<AuthMode>('login');
   const [name, setName] = useState('');
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button } from './components/Button';
+import { colors } from './theme';
+
+export function LoginScreen({ onLogin, onForgotPassword, notice }: { onLogin: (email: string, password: string) => Promise<void>; onForgotPassword: () => void; notice: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -189,6 +194,9 @@ export function LoginScreen({
           />
         </View>
       </View>
+      {error ? <Text accessibilityRole="alert" style={styles.error}>{error}</Text> : null}
+      <Button title="Entrar" busy={busy} onPress={() => void submit()} />
+      <Pressable accessibilityRole="link" onPress={onForgotPassword} disabled={busy} style={styles.link}><Text style={styles.linkText}>Esqueci minha senha</Text></Pressable>
     </ScrollView>
   </KeyboardAvoidingView>;
 }
@@ -222,4 +230,11 @@ const styles = StyleSheet.create({
   submitWrap: { marginTop: 12 },
   error: { color: colors.error, fontSize: 14, lineHeight: 21, marginBottom: 12 },
   notice: { color: colors.navy, padding: 14, backgroundColor: colors.soft, borderRadius: 10, marginBottom: 20, fontSize: 14, lineHeight: 20 },
+  page: { flex: 1, backgroundColor: colors.white }, content: { flexGrow: 1, justifyContent: 'center', padding: 28, paddingBottom: 48 },
+  brand: { marginBottom: 52 }, brandName: { color: colors.navy, fontWeight: '800', fontSize: 26 }, subtitle: { color: colors.muted, marginTop: 6, fontSize: 14 },
+  title: { color: colors.navy, fontSize: 24, fontWeight: '700', marginBottom: 10 }, description: { color: colors.gray, fontSize: 15, lineHeight: 23, marginBottom: 28 },
+  field: { marginBottom: 20, gap: 8 }, label: { fontSize: 14, color: colors.navy, fontWeight: '600' },
+  input: { borderWidth: 1, borderColor: colors.border, borderRadius: 10, paddingHorizontal: 14, minHeight: 50, color: colors.navy, fontSize: 16 },
+  link: { alignSelf: 'center', padding: 12, marginTop: 8 }, linkText: { color: colors.navy, fontWeight: '600' },
+  error: { color: colors.error, lineHeight: 21, marginBottom: 18 }, notice: { color: colors.navy, padding: 14, backgroundColor: colors.soft, borderRadius: 8, marginBottom: 20 },
 });

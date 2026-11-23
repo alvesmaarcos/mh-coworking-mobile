@@ -45,8 +45,18 @@ export class ApiClient {
 
   register(nome: string, email: string, senha: string) { return this.request<User>('/usuarios', { method: 'POST', body: { nome, email, senha } }); }
   login(email: string, senha: string) { return this.request<Session>('/login', { method: 'POST', body: { email, senha } }); }
+  requestPasswordReset(email: string) { return this.request<void>('/senha/esqueci', { method: 'POST', body: { email } }); }
+  resetPassword(email: string, codigo: string, senha: string) { return this.request<void>('/senha/redefinir', { method: 'POST', body: { email, codigo, senha } }); }
   currentUser(session: Session) { return this.request<User>(`/usuarios/${session.usuario.id}`, { token: session.token }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
+  room(id: number, signal?: AbortSignal) { return this.request<Room>(`/salas/${id}`, { signal }); }
+  assetUrl(path: string | null | undefined) {
+    if (!path) return null;
+    if (/^https?:\/\//i.test(path)) return path;
+    const assetPath = path.startsWith('/') ? path : `/${path}`;
+    const baseUrl = this.baseUrl.replace(/\/+$/, '');
+    return baseUrl.startsWith('/') ? `${baseUrl}${assetPath}` : `${new URL(baseUrl).origin}${assetPath}`;
+  }
   reservations(token: string, filters: Filters = {}, signal?: AbortSignal) {
     const query = new URLSearchParams();
     if (filters.roomId !== undefined) query.set('sala_id', String(filters.roomId));

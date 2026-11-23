@@ -11,6 +11,7 @@ export interface UsuarioRepository {
         nome: string;
         email: string;
     }): void;
+    atualizarSenha(id: Id, senha: string): void;
     excluir(id: Id): void;
 }
 export interface SalaRepository {
@@ -37,6 +38,9 @@ export interface PasswordHasher {
 export interface TokenService {
     sign(usuario: UsuarioAutenticado): string;
     verify(token: string): UsuarioAutenticado;
+}
+export interface EmailSender {
+    enviar(para: string, assunto: string, texto: string): Promise<void>;
 }
 export interface Clock {
     now(): Date;

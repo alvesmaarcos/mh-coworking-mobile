@@ -53,5 +53,24 @@ export function createUsuarioController(usuarioService: ReturnType<typeof create
             next(error);
         }
     }
-    return { cadastrar, login, buscarPorId, atualizar, excluir };
+    async function esqueciSenha(req: Request, res: Response, next: NextFunction) {
+        try {
+            await usuarioService.solicitarRecuperacao(req.body?.email);
+            res.status(204).send();
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    async function redefinirSenha(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email, codigo, senha } = req.body ?? {};
+            await usuarioService.redefinirSenha(email, codigo, senha);
+            res.status(204).send();
+        }
+        catch (error) {
+            next(error);
+        }
+    }
+    return { cadastrar, login, buscarPorId, atualizar, excluir, esqueciSenha, redefinirSenha };
 }

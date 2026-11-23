@@ -9,7 +9,10 @@ import { sessionStorage } from './src/infrastructure/storage';
 import { ApiClient } from './src/infrastructure/api';
 import { ClientHomeScreen } from './src/ui/ClientHomeScreen';
 import { LoginScreen } from './src/ui/LoginScreen';
+import { PasswordRecoveryScreen } from './src/ui/PasswordRecoveryScreen';
 import { ReservationsScreen } from './src/ui/ReservationsScreen';
+import { RoomsScreen } from './src/ui/RoomsScreen';
+import type { AppTab } from './src/ui/components/BottomNavigation';
 import { colors } from './src/ui/theme';
 
 export default function App() {
@@ -20,7 +23,14 @@ export default function App() {
   ));
   const snapshot = useSyncExternalStore(auth.subscribe, auth.getSnapshot, auth.getSnapshot);
   const [fontsLoaded, fontError] = useFonts(Feather.font);
+  const [recovering, setRecovering] = useState(false);
+  const [recoveryNotice, setRecoveryNotice] = useState('');
+  const [activeTab, setActiveTab] = useState<AppTab>('rooms');
   useEffect(() => { void auth.restore(); }, [auth]);
+  function logout() {
+    setActiveTab('rooms');
+    void auth.logout();
+  }
   return <SafeAreaProvider>
     <StatusBar style="dark" />
     <View style={styles.background}><SafeAreaView edges={['top', 'left', 'right']} style={styles.app}>
@@ -35,6 +45,11 @@ export default function App() {
             onRegister={(name, email, password) => auth.register(api, name, email, password)}
             notice={snapshot.notice}
           />}
+        snapshot.session ? activeTab === 'rooms'
+          ? <RoomsScreen key={snapshot.session.token} api={api} onNavigate={setActiveTab} />
+          : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={logout} onNavigate={setActiveTab} />
+          : recovering ? <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />
+            : <LoginScreen onLogin={(email, password) => auth.login(api, email, password)} onForgotPassword={() => { setRecoveryNotice(''); setRecovering(true); }} notice={recoveryNotice || snapshot.notice} />}
     </SafeAreaView></View>
   </SafeAreaProvider>;
 }

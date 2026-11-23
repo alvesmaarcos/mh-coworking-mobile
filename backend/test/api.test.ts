@@ -9,7 +9,8 @@ import { createBackend } from '../src/main/composition.js';
 import { backendRoot } from '../src/main/paths.js';
 const directory = mkdtempSync(join(tmpdir(), 'mh-clean-'));
 const databasePath = join(directory, 'test.db');
-const config = { databasePath, jwtSecret: 'test-only-secret', clock: { now: () => new Date(2030, 0, 1) } };
+const emails: { para: string; texto: string }[] = [];
+const config = { databasePath, jwtSecret: 'test-only-secret', clock: { now: () => new Date(2030, 0, 1) }, email: { enviar: async (para: string, _assunto: string, texto: string) => { emails.push({ para, texto }); } } };
 let backend: ReturnType<typeof createBackend>;
 let server: Server;
 let base: string;
@@ -54,6 +55,8 @@ test('cadastro e login mantêm contrato, bcrypt e perfis', async () => {
     };
     assert.match(stored.senha, /^\$2/);
     assert.equal((await request('/usuarios', 'POST', { nome: 'Outro', email: 'cliente@example.com', senha: '123456' })).status, 409);
+    assert.equal((await request('/usuarios', 'POST', { nome: 'Outro', email: 'CLIENTE@Example.com', senha: '123456' })).status, 409);
+    assert.equal((await request('/login', 'POST', { email: 'Cliente@Example.COM', senha: '123456' })).status, 200);
     assert.equal((await request('/login', 'POST', { email: 'cliente@example.com', senha: 'errada' })).status, 401);
     const login = await request('/login', 'POST', { email: 'cliente@example.com', senha: '123456' });
     assert.equal(login.status, 200);
@@ -62,6 +65,20 @@ test('cadastro e login mantêm contrato, bcrypt e perfis', async () => {
     admin = (await request('/login', 'POST', { email: 'admin@montehorebe.com', senha: 'admin123' })).body.token;
     await request('/usuarios', 'POST', { nome: 'Segundo', email: 'segundo@example.com', senha: '123456' });
     secondClient = (await request('/login', 'POST', { email: 'segundo@example.com', senha: '123456' })).body.token;
+});
+test('preflight cross-origin permite requisições do frontend web', async () => {
+    const response = await fetch(base + '/login', {
+        method: 'OPTIONS',
+        headers: {
+            Origin: 'http://localhost:8082',
+            'Access-Control-Request-Method': 'POST',
+            'Access-Control-Request-Headers': 'content-type',
+        },
+    });
+    assert.equal(response.status, 204);
+    assert.equal(response.headers.get('access-control-allow-origin'), '*');
+    assert.match(response.headers.get('access-control-allow-methods') ?? '', /POST/);
+    assert.match(response.headers.get('access-control-allow-headers') ?? '', /Content-Type/i);
 });
 test('autenticação e propriedade de usuários preservam respostas', async () => {
     assert.deepEqual(await request('/reservas'), { status: 401, body: { erro: 'Token não fornecido' } });
@@ -163,6 +180,27 @@ test('exclusão do próprio usuário mantém status 204', async () => {
     assert.equal((await request(`/usuarios/${userId}`, 'DELETE', undefined, secondClient)).status, 403);
     assert.equal((await request(`/usuarios/${userId}`, 'DELETE', undefined, client)).status, 204);
     assert.equal((await request(`/usuarios/${userId}`, 'GET', undefined, client)).status, 404);
+});
+test('recuperação de senha por código de 6 dígitos', async () => {
+    const email = 'segundo@example.com';
+    assert.equal((await request('/senha/esqueci', 'POST', { email: 'ninguem@example.com' })).status, 204);
+    assert.equal(emails.length, 0);
+    assert.equal((await request('/senha/esqueci', 'POST', { email })).status, 204);
+    const codigo = emails.at(-1)!.texto.match(/\b\d{6}\b/)![0];
+    assert.equal(emails.at(-1)!.para, email);
+    const errado = codigo === '000000' ? '111111' : '000000';
+    assert.equal((await request('/senha/redefinir', 'POST', { email, codigo: errado, senha: 'nova123' })).status, 400);
+    assert.equal((await request('/senha/redefinir', 'POST', { email, codigo, senha: '123' })).status, 400);
+    assert.equal((await request('/senha/redefinir', 'POST', { email: email.toUpperCase(), codigo, senha: 'nova123' })).status, 204);
+    assert.equal((await request('/senha/redefinir', 'POST', { email, codigo, senha: 'outra123' })).status, 400, 'código é de uso único');
+    assert.equal((await request('/login', 'POST', { email, senha: '123456' })).status, 401);
+    assert.equal((await request('/login', 'POST', { email, senha: 'nova123' })).status, 200);
+    await request('/senha/esqueci', 'POST', { email });
+    const novo = emails.at(-1)!.texto.match(/\b\d{6}\b/)![0];
+    const outro = novo === '000000' ? '111111' : '000000';
+    for (let i = 0; i < 5; i++)
+        await request('/senha/redefinir', 'POST', { email, codigo: outro, senha: 'nova123' });
+    assert.equal((await request('/senha/redefinir', 'POST', { email, codigo: novo, senha: 'nova123' })).status, 400, 'bloqueia após 5 tentativas');
 });
 test('chave JWT ausente impede inicialização antes de abrir o banco', () => {
     assert.throws(() => createBackend({ databasePath: ':memory:', jwtSecret: '' }), /JWT_SECRET/);

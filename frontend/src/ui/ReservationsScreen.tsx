@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { ActivityIndicator, AppState, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ApiClient, ApiError } from '../infrastructure/api';
 import { Cancellation } from '../application/cancellation';
 import type { Filters as FilterValues, Reservation, ReservationTab, Room, Session } from '../domain/models';
@@ -10,10 +9,10 @@ import { Button } from './components/Button';
 import { Dialog } from './components/Dialog';
 import { Filters } from './components/Filters';
 import { ReservationCard } from './components/ReservationCard';
+import { BottomNavigation, type AppTab } from './components/BottomNavigation';
 import { colors } from './theme';
 
-export function ReservationsScreen({ api, session, onLogout }: { api: ApiClient; session: Session; onLogout: () => void }) {
-  const insets = useSafeAreaInsets();
+export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api: ApiClient; session: Session; onLogout: () => void; onNavigate: (tab: AppTab) => void }) {
   const [tab, setTab] = useState<ReservationTab>('upcoming');
   const [filters, setFilters] = useState<FilterValues>({});
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -106,11 +105,7 @@ export function ReservationsScreen({ api, session, onLogout }: { api: ApiClient;
         <View style={styles.state}><Feather name="calendar" size={30} color={colors.icon} /><Text style={styles.emptyTitle}>{tab === 'upcoming' ? 'Nenhuma reserva próxima' : 'Nenhuma reserva no histórico'}</Text><Text style={styles.emptyText}>{filters.roomId !== undefined || filters.date ? 'Não há reservas para os filtros selecionados.' : 'As reservas aparecerão aqui quando estiverem disponíveis.'}</Text></View> : undefined}
     />
     </View>
-    <View style={[styles.navigation, { paddingBottom: Math.max(insets.bottom, 8) }]}>
-      <View accessibilityLabel="Salas, indisponível nesta etapa" accessibilityState={{ disabled: true }} style={styles.navItem}><Feather name="home" size={23} color={colors.gray} /><Text style={styles.navText}>Salas</Text></View>
-      <View accessibilityRole="tab" accessibilityLabel="Reservas" accessibilityState={{ selected: true }} style={styles.navItem}><Feather name="calendar" size={24} color="#080808" /><Text style={[styles.navText, styles.navActive]}>Reservas</Text></View>
-      <View accessibilityLabel="Perfil, indisponível nesta etapa" accessibilityState={{ disabled: true }} style={styles.navItem}><Feather name="user" size={24} color={colors.gray} /><Text style={styles.navText}>Perfil</Text></View>
-    </View>
+    <BottomNavigation active="reservations" onSelect={onNavigate} />
     <Dialog title="Cancelar reserva?" visible={selected !== null} dismissible={!cancelling} onClose={() => setSelected(null)}>
       {selected ? <Text style={styles.dialogText}>{selected.sala_nome}{'\n'}{formatDate(selected.data)} às {selected.hora}h{'\n\n'}A reserva será removida e o horário ficará disponível novamente.</Text> : null}
       {cancelError ? <Text accessibilityRole="alert" style={styles.error}>{cancelError}</Text> : null}
@@ -130,7 +125,5 @@ const styles = StyleSheet.create({
   state: { alignItems: 'center', paddingHorizontal: 18, paddingVertical: 28, gap: 14 }, emptyTitle: { fontWeight: '600', color: colors.navy, fontSize: 17, textAlign: 'center' }, emptyText: { fontSize: 14, color: colors.gray, textAlign: 'center', lineHeight: 21 },
   error: { color: colors.error, textAlign: 'center', lineHeight: 21 },
   notice: { marginHorizontal: 19, marginTop: 16, backgroundColor: colors.soft, padding: 12, borderRadius: 8, flexDirection: 'row', alignItems: 'center', gap: 8 }, noticeText: { color: colors.navy, flex: 1, fontSize: 13 },
-  navigation: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#C7C7C7', paddingTop: 12, backgroundColor: colors.white },
-  navItem: { flex: 1, minHeight: 43, alignItems: 'center', gap: 4 }, navText: { fontSize: 9, fontWeight: '600', color: colors.gray }, navActive: { color: '#080808', fontWeight: '700' },
   dialogText: { fontSize: 15, color: colors.gray, lineHeight: 23 },
 });

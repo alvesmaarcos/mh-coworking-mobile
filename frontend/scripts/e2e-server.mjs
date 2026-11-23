@@ -7,7 +7,9 @@ import { createPreview } from './preview.mjs';
 const backend = createBackend({ databasePath: ':memory:', jwtSecret: 'isolated-e2e-secret', clock: { now: () => new Date(2030, 0, 1, 12) } });
 backend.db.prepare('INSERT INTO usuarios (id, nome, email, senha, tipo) VALUES (?, ?, ?, ?, ?)')
   .run(2, 'Cliente teste', 'cliente@example.com', bcrypt.hashSync('123456', 10), 'CLIENTE');
-backend.db.exec(`INSERT INTO salas (id, nome, valor_hora) VALUES (1, 'Sala Individual', 20), (2, 'Sala Grande', 50)`);
+backend.db.exec(`INSERT INTO salas (id, nome, descricao, atributos, valor_hora, imagem_url) VALUES
+  (1, 'Sala Individual', 'Espaço individual climatizado.', 'Climatizada, Privativa', 20, '/public/sala-individual-3.jpeg'),
+  (2, 'Sala Grande', 'Espaço para reuniões.', 'TV ampla, Espaçosa', 50, '/public/sala-grande-1.jpeg')`);
 function reset() {
   backend.db.exec('DELETE FROM reservas');
   backend.db.exec('DELETE FROM usuarios WHERE id > 2');
