@@ -1,4 +1,4 @@
-import type { AvailableHour, CreatedReservation, Filters, Reservation, ReservationInput, Room, Session, UpdateUserInput, User } from '../domain/models';
+import type { AvailableHour, CreatedReservation, Filters, Reservation, ReservationInput, Room, RoomInput, Session, UpdateUserInput, User } from '../domain/models';
 
 export class ApiError extends Error {
   constructor(message: string, public readonly status: number) { super(message); }
@@ -52,6 +52,8 @@ export class ApiClient {
   deleteUser(token: string, id: number) { return this.request<void>(`/usuarios/${id}`, { token, method: 'DELETE' }); }
   rooms(signal?: AbortSignal) { return this.request<Room[]>('/salas', { signal }); }
   room(id: number, signal?: AbortSignal) { return this.request<Room>(`/salas/${id}`, { signal }); }
+  createRoom(token: string, room: RoomInput) { return this.request<Room>('/salas', { token, method: 'POST', body: room }); }
+  updateRoom(token: string, id: number, room: RoomInput) { return this.request<Room>(`/salas/${id}`, { token, method: 'PUT', body: room }); }
   availableHours(roomId: number, date: string, signal?: AbortSignal) {
     const query = new URLSearchParams({ data: date });
     return this.request<AvailableHour[]>(`/salas/${roomId}/horarios?${query}`, { signal });

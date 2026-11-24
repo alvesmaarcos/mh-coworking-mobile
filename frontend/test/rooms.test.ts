@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { filterRooms } from '../src/domain/rooms';
+import { filterRooms, parsePrice } from '../src/domain/rooms';
 import type { Room } from '../src/domain/models';
 
 const rooms: Room[] = [
@@ -14,4 +14,11 @@ test('busca salas por nome, descrição e características sem diferenciar acent
   assert.deepEqual(filterRooms(rooms, '  climatizada  ').map(room => room.id), [1]);
   assert.deepEqual(filterRooms(rooms, 'inexistente'), []);
   assert.deepEqual(filterRooms(rooms, '  '), rooms);
+});
+
+test('converte valor da hora com vírgula ou ponto e rejeita vazio, zero e texto', () => {
+  assert.equal(parsePrice('35'), 35);
+  assert.equal(parsePrice(' 35,50 '), 35.5);
+  assert.equal(parsePrice('20.5'), 20.5);
+  for (const value of ['', '  ', '0', '-3', 'abc']) assert.equal(parsePrice(value), null);
 });

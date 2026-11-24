@@ -15,6 +15,7 @@ import { BottomNavigation, type AppTab } from "./components/BottomNavigation";
 import { Button } from "./components/Button";
 import { RoomCard } from "./components/RoomCard";
 import { RoomDetailsScreen } from "./RoomDetailsScreen";
+import { RoomFormSheet } from "./RoomFormSheet";
 import { ReservationScreen } from "./ReservationScreen";
 import { colors } from "./theme";
 
@@ -35,6 +36,8 @@ export function RoomsScreen({
   const [revision, setRevision] = useState(0);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [reservationRoom, setReservationRoom] = useState<Room | null>(null);
+  const [editing, setEditing] = useState<Room | "new" | null>(null);
+  const isAdmin = session.usuario.tipo === "ADM";
   const reload = useCallback(() => setRevision((value) => value + 1), []);
 
   useEffect(() => {
@@ -116,6 +119,7 @@ export function RoomsScreen({
             room={item}
             imageUrl={api.assetUrl(item.imagem_url)}
             onPress={() => setSelectedRoom(item)}
+            onEdit={isAdmin ? () => setEditing(item) : undefined}
           />
         )}
         refreshing={loading}
@@ -153,6 +157,23 @@ export function RoomsScreen({
           )
         }
       />
+      {isAdmin ? (
+        <View style={styles.newRoom}>
+          <Button orange title="+ Nova sala" onPress={() => setEditing("new")} />
+        </View>
+      ) : null}
+      {editing ? (
+        <RoomFormSheet
+          api={api}
+          token={session.token}
+          room={editing === "new" ? undefined : editing}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            reload();
+          }}
+        />
+      ) : null}
       <BottomNavigation active="rooms" onSelect={onNavigate} />
     </View>
   );
@@ -216,4 +237,5 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   error: { color: colors.error, textAlign: "center", lineHeight: 21 },
+  newRoom: { alignItems: "flex-end", paddingHorizontal: 17, paddingBottom: 12 },
 });

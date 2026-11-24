@@ -99,3 +99,16 @@ test('atualiza e exclui usuário com rotas, método e token corretos', async () 
   assert.equal(calls[1].init?.method, 'DELETE');
   assert.equal((calls[1].init?.headers as Record<string, string>).Authorization, 'Bearer token');
 });
+test('cadastra e edita sala com JWT, rota e corpo esperados pelo back', async () => {
+  const calls: { url: string; init?: RequestInit }[] = [];
+  const api = new ApiClient('http://api.test', undefined, async (input, init) => {
+    calls.push({ url: String(input), init });
+    return Response.json({ id: 5, nome: 'Sala' });
+  });
+  const input = { nome: 'Sala', descricao: null, atributos: 'TV', valor_hora: 35.5, imagem_url: '/public/copa-1.jpeg' };
+  await api.createRoom('token', input);
+  await api.updateRoom('token', 5, input);
+  assert.deepEqual(calls.map(call => [call.init?.method, call.url]), [['POST', 'http://api.test/salas'], ['PUT', 'http://api.test/salas/5']]);
+  assert.deepEqual(JSON.parse(String(calls[1].init?.body)), input);
+  assert.equal((calls[1].init?.headers as Record<string, string>).Authorization, 'Bearer token');
+});

@@ -5,23 +5,28 @@ import type { Room } from '../../domain/models';
 import { formatPrice } from '../../domain/reservations';
 import { colors } from '../theme';
 
-export function RoomCard({ room, imageUrl, onPress }: { room: Room; imageUrl: string | null; onPress?: () => void }) {
-  const [imageFailed, setImageFailed] = useState(false);
+export function RoomCard({ room, imageUrl, onPress, onEdit }: { room: Room; imageUrl: string | null; onPress?: () => void; onEdit?: () => void }) {
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const imageFailed = failedUrl === imageUrl;
   const attributes = (room.atributos ?? '').split(',').map(value => value.trim()).filter(Boolean);
   return <Pressable accessibilityRole="button" accessibilityLabel={`Ver detalhes de ${room.nome}`} onPress={onPress} disabled={!onPress}
     style={({ pressed }) => [styles.card, pressed && onPress ? styles.pressed : null]}>
     {imageUrl && !imageFailed
-      ? <Image accessibilityRole="image" accessibilityLabel={`Foto de ${room.nome}`} source={{ uri: imageUrl }} onError={() => setImageFailed(true)} style={styles.image} />
+      ? <Image accessibilityRole="image" accessibilityLabel={`Foto de ${room.nome}`} source={{ uri: imageUrl }} onError={() => setFailedUrl(imageUrl)} style={styles.image} />
       : <View style={[styles.image, styles.imageFallback]}><Feather name="image" size={26} color={colors.gray} /></View>}
     <View style={styles.content}>
-      <Text style={styles.name}>{room.nome}</Text>
-      {room.descricao ? <Text numberOfLines={2} style={styles.description}>{room.descricao}</Text> : null}
+      <Text style={[styles.name, onEdit && styles.besideEdit]}>{room.nome}</Text>
+      {room.descricao ? <Text numberOfLines={2} style={[styles.description, onEdit && styles.besideEdit]}>{room.descricao}</Text> : null}
       {attributes.length ? <View style={styles.attributes}>{attributes.map((attribute, index) =>
         <View key={`${attribute}-${index}`} style={styles.attribute}><Text style={styles.attributeText}>{attribute}</Text></View>)}</View> : null}
       {room.valor_hora !== undefined ? <View style={styles.priceRow}>
         <Text style={styles.price}>{formatPrice(room.valor_hora)}</Text><Text style={styles.perHour}>/h</Text>
       </View> : null}
     </View>
+    {onEdit ? <Pressable accessibilityRole="button" accessibilityLabel={`Editar ${room.nome}`} onPress={onEdit} hitSlop={8}
+      style={({ pressed }) => [styles.edit, pressed && styles.pressed]}>
+      <Feather name="edit-2" size={15} color={colors.navy} />
+    </Pressable> : null}
   </Pressable>;
 }
 
@@ -48,4 +53,6 @@ const styles = StyleSheet.create({
   priceRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'flex-end', marginTop: 2, gap: 2 },
   price: { color: colors.orange, fontSize: 10, fontWeight: '700' },
   perHour: { color: colors.gray, fontSize: 8 },
+  besideEdit: { paddingRight: 38 },
+  edit: { position: 'absolute', top: 94, right: 10, width: 28, height: 28, borderRadius: 7, borderWidth: 1, borderColor: colors.selectedBorder, backgroundColor: colors.soft, alignItems: 'center', justifyContent: 'center' },
 });

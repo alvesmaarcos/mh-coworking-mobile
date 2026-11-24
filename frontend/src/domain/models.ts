@@ -9,6 +9,7 @@ export interface Room {
   valor_hora?: number;
   imagem_url?: string | null;
 }
+export type RoomInput = Omit<Room, 'id'> & { valor_hora: number };
 export interface Reservation {
   id: number;
   usuario_id: number;
