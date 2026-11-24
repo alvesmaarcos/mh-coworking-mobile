@@ -10,7 +10,9 @@ test('administrador cadastra e edita sala com foto de capa mockada', async ({ pa
   await page.getByRole('textbox', { name: 'E-mail', exact: true }).fill('admin@montehorebe.com');
   await page.getByLabel('Senha', { exact: true }).fill('admin123');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Gestão de salas' })).toBeVisible();
   await expect(page.getByText('Sala Individual', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ver detalhes de Sala Individual' })).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('lista-adm.png') });
 
   await page.getByRole('button', { name: '+ Nova sala', exact: true }).click();

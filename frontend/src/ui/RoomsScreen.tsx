@@ -14,9 +14,7 @@ import { filterRooms } from "../domain/rooms";
 import { BottomNavigation, type AppTab } from "./components/BottomNavigation";
 import { Button } from "./components/Button";
 import { RoomCard } from "./components/RoomCard";
-import { RoomDetailsScreen } from "./RoomDetailsScreen";
 import { RoomFormSheet } from "./RoomFormSheet";
-import { ReservationScreen } from "./ReservationScreen";
 import { colors } from "./theme";
 
 export function RoomsScreen({
@@ -34,8 +32,6 @@ export function RoomsScreen({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
-  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
-  const [reservationRoom, setReservationRoom] = useState<Room | null>(null);
   const [editing, setEditing] = useState<Room | "new" | null>(null);
   const isAdmin = session.usuario.tipo === "ADM";
   const reload = useCallback(() => setRevision((value) => value + 1), []);
@@ -63,34 +59,11 @@ export function RoomsScreen({
     return () => controller.abort();
   }, [api, revision]);
 
-  if (reservationRoom) {
-    return (
-      <ReservationScreen
-        api={api}
-        token={session.token}
-        room={reservationRoom}
-        onBack={() => setReservationRoom(null)}
-        onConfirmed={() => onNavigate("reservations")}
-      />
-    );
-  }
-
-  if (selectedRoom) {
-    return (
-      <RoomDetailsScreen
-        api={api}
-        room={selectedRoom}
-        onBack={() => setSelectedRoom(null)}
-        onReserve={setReservationRoom}
-      />
-    );
-  }
-
   const visibleRooms = filterRooms(rooms, query);
   return (
     <View style={styles.page}>
       <Text accessibilityRole="header" style={styles.title}>
-        Espaços disponíveis
+        Gestão de salas
       </Text>
       <View style={[styles.search, searchFocused && styles.searchFocused]}>
         <Feather name="search" size={17} color={colors.gray} />
@@ -118,7 +91,6 @@ export function RoomsScreen({
           <RoomCard
             room={item}
             imageUrl={api.assetUrl(item.imagem_url)}
-            onPress={() => setSelectedRoom(item)}
             onEdit={isAdmin ? () => setEditing(item) : undefined}
           />
         )}
@@ -211,6 +183,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     borderWidth: 0,
     outlineStyle: "none",
+    outlineWidth: 0,
   } as any,
   listContent: {
     paddingHorizontal: 17,

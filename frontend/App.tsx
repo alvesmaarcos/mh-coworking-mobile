@@ -54,7 +54,7 @@ export default function App() {
               ? <RoomsScreen key={snapshot.session.token} api={api} session={snapshot.session} onNavigate={setActiveTab} />
               : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
           ) : (
-            <ClientHomeScreen key={snapshot.session.token} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
+            <ClientHomeScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
           )
         ) : recovering ? (
           <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />

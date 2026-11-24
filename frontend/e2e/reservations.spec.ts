@@ -16,7 +16,7 @@ test.beforeEach(async ({ page, request }) => {
 
 test('lista espaços, busca por nome e navega para reservas', async ({ page }) => {
   await login(page, undefined, undefined, false);
-  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Gestão de salas' })).toBeVisible();
   await expect(page.getByText('Sala Individual', { exact: true })).toBeVisible();
   await expect(page.getByText('Sala Grande', { exact: true })).toBeVisible();
   const search = page.getByRole('textbox', { name: 'Buscar sala' });
@@ -37,6 +37,21 @@ test('lista espaços, busca por nome e navega para reservas', async ({ page }) =
   await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.getByRole('tab', { name: 'Salas', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Gestão de salas' })).toBeVisible();
+});
+
+test('cliente navega por salas, detalhes e confirma reserva', async ({ page }) => {
+  await login(page, 'cliente@example.com', '123456', false);
+  await expect(page.getByText('Área do cliente', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Ver detalhes de Sala Individual' }).click();
+  await expect(page.getByRole('heading', { name: 'Detalhes da sala' })).toBeVisible();
+  await page.getByRole('button', { name: 'Reservar horário', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Confirmar reserva', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: '8h - 9h', exact: true }).click();
+  await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
+  await expect(page.getByText('Reserva confirmada com sucesso.', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
 });
 
@@ -52,7 +67,7 @@ test('abas seguem as referências e sessão é restaurada após recarregar', asy
   await expect(cancelButtons(page)).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('reservas-historico.png'), fullPage: true });
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Gestão de salas' })).toBeVisible();
   await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.getByRole('button', { name: 'Sair da conta' }).click();
@@ -132,7 +147,7 @@ test('separa área de CLIENTE e ADM, valida credenciais erradas e expira 401', a
   await expect(cancelButtons(page)).toHaveCount(3);
   await page.route('**/api/reservas', route => route.fulfill({ status: 401, json: { erro: 'Token inválido ou expirado' } }));
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Gestão de salas' })).toBeVisible();
   await page.getByRole('tab', { name: 'Reservas', exact: true }).click();
   await expect(page.getByText('Sua sessão expirou. Entre novamente.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Entrar', exact: true })).toBeVisible();

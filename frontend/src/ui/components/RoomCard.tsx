@@ -9,8 +9,7 @@ export function RoomCard({ room, imageUrl, onPress, onEdit }: { room: Room; imag
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const imageFailed = failedUrl === imageUrl;
   const attributes = (room.atributos ?? '').split(',').map(value => value.trim()).filter(Boolean);
-  return <Pressable accessibilityRole="button" accessibilityLabel={`Ver detalhes de ${room.nome}`} onPress={onPress} disabled={!onPress}
-    style={({ pressed }) => [styles.card, pressed && onPress ? styles.pressed : null]}>
+  const content = <>
     {imageUrl && !imageFailed
       ? <Image accessibilityRole="image" accessibilityLabel={`Foto de ${room.nome}`} source={{ uri: imageUrl }} onError={() => setFailedUrl(imageUrl)} style={styles.image} />
       : <View style={[styles.image, styles.imageFallback]}><Feather name="image" size={26} color={colors.gray} /></View>}
@@ -27,7 +26,11 @@ export function RoomCard({ room, imageUrl, onPress, onEdit }: { room: Room; imag
       style={({ pressed }) => [styles.edit, pressed && styles.pressed]}>
       <Feather name="edit-2" size={15} color={colors.navy} />
     </Pressable> : null}
-  </Pressable>;
+  </>;
+  return onPress
+    ? <Pressable accessibilityRole="button" accessibilityLabel={`Ver detalhes de ${room.nome}`} onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}>{content}</Pressable>
+    : <View style={styles.card}>{content}</View>;
 }
 
 const styles = StyleSheet.create({
