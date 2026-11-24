@@ -1,16 +1,26 @@
 workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizada em camadas de Clean Architecture conforme o código existente." {
 
     model {
-        cliente = person "Cliente" "Consulta salas e horários, cria e acompanha as próprias reservas." {
+        cliente = person "Cliente" "Consulta salas, horários e faz/cancela reservas" {
             tags "Cliente"
         }
 
-        administrador = person "Administrador" "Mantém o catálogo de salas e consulta ou cancela reservas." {
+        administrador = person "Administrador" "Gerencia salas e acompanha reservas" {
             tags "Administrador"
         }
 
-        coworking = softwareSystem "Plataforma de Reservas Monte Horebe" "API para cadastro de usuários, gestão de salas e reservas de espaços de coworking." {
-            api = container "API de Reservas" "Expõe endpoints REST, autentica usuários e coordena as regras de aplicação." "Node.js, Express 5, JavaScript ES modules" {
+        midia = softwareSystem "Armazenamento de Mídia" "Armazena imagens pesadas de perfil, fotos das salas e anexos enviados pelos usuários" {
+            tags "Externo"
+        }
+
+        email = softwareSystem "Sistema de E-mail" "Serviço externo para envio de confirmações, lembretes e cancelamentos de reservas." {
+            tags "Externo"
+        }
+
+        coworking = softwareSystem "MH Coworking" "Plataforma de reservas de salas e espaços de coworking." {
+            app = container "App Mobile (FrontEnd)" "Fornece todas as funcionalidades de consulta, reserva de salas e gestão administrativa via dispositivos móveis." "React Native / TypeScript"
+
+            api = container "API (Backend)" "Fornece a lógica de negócios de reservas e autenticação via API JSON/HTTPS, serve imagens estáticas (/public) e documentação Swagger (/docs)." "Node.js, Express 5, JavaScript, bcrypt" {
                 group "Adaptadores de entrada" {
                     bootstrap = component "Inicialização do servidor" "Abre o servidor HTTP na porta 3000." "src/app/server.js"
                     httpApp = component "Aplicação HTTP" "Configura JSON, arquivos públicos, documentação Swagger e tratamento de erros." "src/app/App.js"
@@ -40,18 +50,20 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
                 }
             }
 
-            banco = container "Banco de dados" "Armazena usuários, salas e reservas em um arquivo local." "SQLite (database.db)" {
+            banco = container "Database" "Armazena usuários, salas e reservas" "SQLite3 (database.db)" {
                 tags "Database"
             }
 
-            cliente -> api "Usa a API para consultar salas e reservar espaços" "HTTP/JSON"
-            administrador -> api "Administra salas e reservas" "HTTP/JSON"
-            cliente -> usuarioRoutes "Cadastra-se e autentica-se" "HTTP/JSON"
-            cliente -> salaRoutes "Consulta salas" "HTTP/JSON"
-            cliente -> reservaRoutes "Consulta horários e solicita reservas" "HTTP/JSON"
-            administrador -> salaRoutes "Administra salas" "HTTP/JSON"
-            administrador -> reservaRoutes "Consulta e cancela reservas" "HTTP/JSON"
-            api -> banco "Lê e grava os dados da aplicação" "SQLite"
+            administrador -> app "Gerencia salas e acompanha reservas usando" "HTTPS"
+            cliente -> app "Consulta salas e faz/cancela reservas usando" "HTTPS"
+            app -> api "Faz chamadas de API para" "JSON / HTTPS / JWT"
+            app -> midia "Baixa/carrega imagens diretamente de" "HTTPS"
+            api -> midia "Realiza upload e obtém URLs de imagens em" "HTTPS / API"
+            api -> email "Dispara e-mails transacionais via" "SMTP / API"
+            api -> banco "Lê e grava usuários, salas e reservas em" "SQL (better-sqlite3)"
+            app -> usuarioRoutes "Cadastro, login e perfil" "JSON/HTTPS"
+            app -> salaRoutes "Consulta e administra salas" "JSON/HTTPS"
+            app -> reservaRoutes "Consulta horários, cria e cancela reservas" "JSON/HTTPS"
 
             bootstrap -> httpApp "Inicia"
             httpApp -> rotas "Registra as rotas"
@@ -69,9 +81,6 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
             usuarioController -> usuarioService "Executa casos de uso"
             salaController -> salaService "Executa casos de uso"
             reservaController -> reservaService "Executa casos de uso"
-            usuarioController -> cliente "Responde com usuário e token" "HTTP/JSON"
-            salaController -> cliente "Responde com dados das salas" "HTTP/JSON"
-            reservaController -> cliente "Responde com horários ou reserva" "HTTP/JSON"
             usuarioService -> usuarioRepository "Consulta e persiste usuários"
             salaService -> salaRepository "Consulta e persiste salas"
             reservaService -> salaRepository "Consulta sala e valor por hora"
@@ -133,7 +142,7 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
         container coworking "C2-containers" {
             title "C2 — Containers"
             include *
-            autoLayout lr
+            autoLayout tb
         }
 
         component api "C3-componentes" {
@@ -151,12 +160,12 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
 
         styles {
             element "Cliente" {
-                background "#1d4ed8"
+                background "#08427b"
                 color "#ffffff"
                 shape Person
             }
             element "Administrador" {
-                background "#7c3aed"
+                background "#08427b"
                 color "#ffffff"
                 shape Person
             }
@@ -165,7 +174,7 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
                 color "#ffffff"
             }
             element "Container" {
-                background "#0e7490"
+                background "#438dd5"
                 color "#ffffff"
             }
             element "Component" {
@@ -173,9 +182,13 @@ workspace "Coworking Monte Horebe" "Arquitetura C4 da API de reservas, organizad
                 color "#ffffff"
             }
             element "Database" {
-                background "#475569"
+                background "#438dd5"
                 color "#ffffff"
                 shape Cylinder
+            }
+            element "Externo" {
+                background "#999999"
+                color "#ffffff"
             }
             element "Code" {
                 background "#334155"

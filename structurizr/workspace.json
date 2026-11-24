@@ -3,11 +3,11 @@
   "description" : "Arquitetura C4 da API de reservas, organizada em camadas de Clean Architecture conforme o código existente.",
   "documentation" : { },
   "id" : 1,
-  "lastModifiedDate" : "2026-11-24T02:37:37Z",
+  "lastModifiedDate" : "2026-11-24T03:24:32Z",
   "model" : {
     "customElements" : [ {
       "description" : "Conexão better-sqlite3 com database.db.",
-      "id" : "80",
+      "id" : "82",
       "metadata" : "Módulo JavaScript",
       "name" : "src/repositories/database.js",
       "properties" : {
@@ -16,7 +16,7 @@
       "tags" : "Element,Code"
     }, {
       "description" : "Adaptador de persistência de reserva.",
-      "id" : "79",
+      "id" : "81",
       "metadata" : "Módulo JavaScript",
       "name" : "src/repositories/reservaRepository.js",
       "properties" : {
@@ -24,15 +24,15 @@
       },
       "relationships" : [ {
         "description" : "Usa a conexão",
-        "destinationId" : "80",
-        "id" : "101",
-        "sourceId" : "79",
+        "destinationId" : "82",
+        "id" : "103",
+        "sourceId" : "81",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Adaptador de persistência de sala.",
-      "id" : "78",
+      "id" : "80",
       "metadata" : "Módulo JavaScript",
       "name" : "src/repositories/salaRepository.js",
       "properties" : {
@@ -40,15 +40,15 @@
       },
       "relationships" : [ {
         "description" : "Usa a conexão",
-        "destinationId" : "80",
-        "id" : "100",
-        "sourceId" : "78",
+        "destinationId" : "82",
+        "id" : "102",
+        "sourceId" : "80",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Adaptador de persistência de usuário.",
-      "id" : "77",
+      "id" : "79",
       "metadata" : "Módulo JavaScript",
       "name" : "src/repositories/usuarioRepository.js",
       "properties" : {
@@ -56,15 +56,15 @@
       },
       "relationships" : [ {
         "description" : "Usa a conexão",
-        "destinationId" : "80",
-        "id" : "99",
-        "sourceId" : "77",
+        "destinationId" : "82",
+        "id" : "101",
+        "sourceId" : "79",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Regras e casos de uso de reserva.",
-      "id" : "76",
+      "id" : "78",
       "metadata" : "Módulo JavaScript",
       "name" : "src/services/reservaService.js",
       "properties" : {
@@ -72,21 +72,21 @@
       },
       "relationships" : [ {
         "description" : "Consulta sala",
-        "destinationId" : "78",
-        "id" : "97",
-        "sourceId" : "76",
+        "destinationId" : "80",
+        "id" : "99",
+        "sourceId" : "78",
         "tags" : "Relationship"
       }, {
         "description" : "Consulta e persiste",
-        "destinationId" : "79",
-        "id" : "98",
-        "sourceId" : "76",
+        "destinationId" : "81",
+        "id" : "100",
+        "sourceId" : "78",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Regras e casos de uso de sala.",
-      "id" : "75",
+      "id" : "77",
       "metadata" : "Módulo JavaScript",
       "name" : "src/services/salaService.js",
       "properties" : {
@@ -94,15 +94,15 @@
       },
       "relationships" : [ {
         "description" : "Usa",
-        "destinationId" : "78",
-        "id" : "96",
-        "sourceId" : "75",
+        "destinationId" : "80",
+        "id" : "98",
+        "sourceId" : "77",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Regras e casos de uso de usuário.",
-      "id" : "74",
+      "id" : "76",
       "metadata" : "Módulo JavaScript",
       "name" : "src/services/usuarioService.js",
       "properties" : {
@@ -110,6 +110,38 @@
       },
       "relationships" : [ {
         "description" : "Usa",
+        "destinationId" : "79",
+        "id" : "97",
+        "sourceId" : "76",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Code"
+    }, {
+      "description" : "Adaptador HTTP para operações de reserva.",
+      "id" : "75",
+      "metadata" : "Módulo JavaScript",
+      "name" : "src/controllers/reservaController.js",
+      "properties" : {
+        "structurizr.dsl.identifier" : "codeReservaController"
+      },
+      "relationships" : [ {
+        "description" : "Invoca",
+        "destinationId" : "78",
+        "id" : "96",
+        "sourceId" : "75",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Code"
+    }, {
+      "description" : "Adaptador HTTP para operações de sala.",
+      "id" : "74",
+      "metadata" : "Módulo JavaScript",
+      "name" : "src/controllers/salaController.js",
+      "properties" : {
+        "structurizr.dsl.identifier" : "codeSalaController"
+      },
+      "relationships" : [ {
+        "description" : "Invoca",
         "destinationId" : "77",
         "id" : "95",
         "sourceId" : "74",
@@ -117,12 +149,12 @@
       } ],
       "tags" : "Element,Code"
     }, {
-      "description" : "Adaptador HTTP para operações de reserva.",
+      "description" : "Adaptador HTTP para operações de usuário.",
       "id" : "73",
       "metadata" : "Módulo JavaScript",
-      "name" : "src/controllers/reservaController.js",
+      "name" : "src/controllers/usuarioController.js",
       "properties" : {
-        "structurizr.dsl.identifier" : "codeReservaController"
+        "structurizr.dsl.identifier" : "codeUsuarioController"
       },
       "relationships" : [ {
         "description" : "Invoca",
@@ -133,40 +165,8 @@
       } ],
       "tags" : "Element,Code"
     }, {
-      "description" : "Adaptador HTTP para operações de sala.",
-      "id" : "72",
-      "metadata" : "Módulo JavaScript",
-      "name" : "src/controllers/salaController.js",
-      "properties" : {
-        "structurizr.dsl.identifier" : "codeSalaController"
-      },
-      "relationships" : [ {
-        "description" : "Invoca",
-        "destinationId" : "75",
-        "id" : "93",
-        "sourceId" : "72",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Code"
-    }, {
-      "description" : "Adaptador HTTP para operações de usuário.",
-      "id" : "71",
-      "metadata" : "Módulo JavaScript",
-      "name" : "src/controllers/usuarioController.js",
-      "properties" : {
-        "structurizr.dsl.identifier" : "codeUsuarioController"
-      },
-      "relationships" : [ {
-        "description" : "Invoca",
-        "destinationId" : "74",
-        "id" : "92",
-        "sourceId" : "71",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Code"
-    }, {
       "description" : "Middleware de autenticação bearer JWT.",
-      "id" : "70",
+      "id" : "72",
       "metadata" : "Módulo JavaScript",
       "name" : "src/middlewares/auth.js",
       "properties" : {
@@ -175,11 +175,55 @@
       "tags" : "Element,Code"
     }, {
       "description" : "Rotas de horários e reservas.",
-      "id" : "69",
+      "id" : "71",
       "metadata" : "Módulo JavaScript",
       "name" : "src/routes/reservaRoutes.js",
       "properties" : {
         "structurizr.dsl.identifier" : "codeReservaRoutes"
+      },
+      "relationships" : [ {
+        "description" : "Encaminha requisições",
+        "destinationId" : "75",
+        "id" : "90",
+        "sourceId" : "71",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Protege operações autenticadas",
+        "destinationId" : "72",
+        "id" : "93",
+        "sourceId" : "71",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Code"
+    }, {
+      "description" : "Rotas de consulta e administração de salas.",
+      "id" : "70",
+      "metadata" : "Módulo JavaScript",
+      "name" : "src/routes/salaRoutes.js",
+      "properties" : {
+        "structurizr.dsl.identifier" : "codeSalaRoutes"
+      },
+      "relationships" : [ {
+        "description" : "Encaminha requisições",
+        "destinationId" : "74",
+        "id" : "89",
+        "sourceId" : "70",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Protege operações administrativas",
+        "destinationId" : "72",
+        "id" : "92",
+        "sourceId" : "70",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Code"
+    }, {
+      "description" : "Rotas de cadastro, login e perfil.",
+      "id" : "69",
+      "metadata" : "Módulo JavaScript",
+      "name" : "src/routes/usuarioRoutes.js",
+      "properties" : {
+        "structurizr.dsl.identifier" : "codeUsuarioRoutes"
       },
       "relationships" : [ {
         "description" : "Encaminha requisições",
@@ -188,60 +232,16 @@
         "sourceId" : "69",
         "tags" : "Relationship"
       }, {
-        "description" : "Protege operações autenticadas",
-        "destinationId" : "70",
+        "description" : "Protege operações de perfil",
+        "destinationId" : "72",
         "id" : "91",
         "sourceId" : "69",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
-      "description" : "Rotas de consulta e administração de salas.",
-      "id" : "68",
-      "metadata" : "Módulo JavaScript",
-      "name" : "src/routes/salaRoutes.js",
-      "properties" : {
-        "structurizr.dsl.identifier" : "codeSalaRoutes"
-      },
-      "relationships" : [ {
-        "description" : "Encaminha requisições",
-        "destinationId" : "72",
-        "id" : "87",
-        "sourceId" : "68",
-        "tags" : "Relationship"
-      }, {
-        "description" : "Protege operações administrativas",
-        "destinationId" : "70",
-        "id" : "90",
-        "sourceId" : "68",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Code"
-    }, {
-      "description" : "Rotas de cadastro, login e perfil.",
-      "id" : "67",
-      "metadata" : "Módulo JavaScript",
-      "name" : "src/routes/usuarioRoutes.js",
-      "properties" : {
-        "structurizr.dsl.identifier" : "codeUsuarioRoutes"
-      },
-      "relationships" : [ {
-        "description" : "Encaminha requisições",
-        "destinationId" : "71",
-        "id" : "86",
-        "sourceId" : "67",
-        "tags" : "Relationship"
-      }, {
-        "description" : "Protege operações de perfil",
-        "destinationId" : "70",
-        "id" : "89",
-        "sourceId" : "67",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Code"
-    }, {
       "description" : "Agrega os módulos de rotas.",
-      "id" : "66",
+      "id" : "68",
       "metadata" : "Módulo JavaScript",
       "name" : "src/routes/index.js",
       "properties" : {
@@ -249,27 +249,27 @@
       },
       "relationships" : [ {
         "description" : "Agrega",
-        "destinationId" : "67",
-        "id" : "83",
-        "sourceId" : "66",
-        "tags" : "Relationship"
-      }, {
-        "description" : "Agrega",
-        "destinationId" : "68",
-        "id" : "84",
-        "sourceId" : "66",
-        "tags" : "Relationship"
-      }, {
-        "description" : "Agrega",
         "destinationId" : "69",
         "id" : "85",
-        "sourceId" : "66",
+        "sourceId" : "68",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Agrega",
+        "destinationId" : "70",
+        "id" : "86",
+        "sourceId" : "68",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Agrega",
+        "destinationId" : "71",
+        "id" : "87",
+        "sourceId" : "68",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Configura o Express, Swagger UI, arquivos estáticos, rotas e erros.",
-      "id" : "65",
+      "id" : "67",
       "metadata" : "Módulo JavaScript",
       "name" : "src/app/App.js",
       "properties" : {
@@ -277,15 +277,15 @@
       },
       "relationships" : [ {
         "description" : "Registra as rotas",
-        "destinationId" : "66",
-        "id" : "82",
-        "sourceId" : "65",
+        "destinationId" : "68",
+        "id" : "84",
+        "sourceId" : "67",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     }, {
       "description" : "Ponto de entrada; inicia o servidor na porta 3000.",
-      "id" : "64",
+      "id" : "66",
       "metadata" : "Módulo JavaScript",
       "name" : "src/app/server.js",
       "properties" : {
@@ -293,111 +293,140 @@
       },
       "relationships" : [ {
         "description" : "Importa a aplicação",
-        "destinationId" : "65",
-        "id" : "81",
-        "sourceId" : "64",
+        "destinationId" : "67",
+        "id" : "83",
+        "sourceId" : "66",
         "tags" : "Relationship"
       } ],
       "tags" : "Element,Code"
     } ],
     "people" : [ {
-      "description" : "Consulta salas e horários, cria e acompanha as próprias reservas.",
+      "description" : "Consulta salas, horários e faz/cancela reservas",
       "id" : "1",
       "name" : "Cliente",
       "properties" : {
         "structurizr.dsl.identifier" : "cliente"
       },
       "relationships" : [ {
-        "description" : "Usa a API para consultar salas e reservar espaços",
-        "destinationId" : "4",
-        "id" : "25",
-        "sourceId" : "1",
-        "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
-      }, {
-        "description" : "Usa a API para consultar salas e reservar espaços",
-        "destinationId" : "3",
-        "id" : "26",
-        "linkedRelationshipId" : "25",
-        "sourceId" : "1",
-        "technology" : "HTTP/JSON"
-      }, {
-        "description" : "Cadastra-se e autentica-se",
-        "destinationId" : "8",
-        "id" : "29",
-        "sourceId" : "1",
-        "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
-      }, {
-        "description" : "Consulta salas",
-        "destinationId" : "9",
+        "description" : "Consulta salas e faz/cancela reservas usando",
+        "destinationId" : "6",
         "id" : "30",
         "sourceId" : "1",
         "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
+        "technology" : "HTTPS"
       }, {
-        "description" : "Consulta horários e solicita reservas",
-        "destinationId" : "10",
+        "description" : "Consulta salas e faz/cancela reservas usando",
+        "destinationId" : "5",
         "id" : "31",
+        "linkedRelationshipId" : "30",
         "sourceId" : "1",
-        "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
+        "technology" : "HTTPS"
       } ],
       "tags" : "Element,Person,Cliente"
     }, {
-      "description" : "Mantém o catálogo de salas e consulta ou cancela reservas.",
+      "description" : "Gerencia salas e acompanha reservas",
       "id" : "2",
       "name" : "Administrador",
       "properties" : {
         "structurizr.dsl.identifier" : "administrador"
       },
       "relationships" : [ {
-        "description" : "Administra salas e reservas",
-        "destinationId" : "4",
-        "id" : "27",
-        "sourceId" : "2",
-        "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
-      }, {
-        "description" : "Administra salas e reservas",
-        "destinationId" : "3",
+        "description" : "Gerencia salas e acompanha reservas usando",
+        "destinationId" : "6",
         "id" : "28",
-        "linkedRelationshipId" : "27",
-        "sourceId" : "2",
-        "technology" : "HTTP/JSON"
-      }, {
-        "description" : "Administra salas",
-        "destinationId" : "9",
-        "id" : "32",
         "sourceId" : "2",
         "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
+        "technology" : "HTTPS"
       }, {
-        "description" : "Consulta e cancela reservas",
-        "destinationId" : "10",
-        "id" : "33",
+        "description" : "Gerencia salas e acompanha reservas usando",
+        "destinationId" : "5",
+        "id" : "29",
+        "linkedRelationshipId" : "28",
         "sourceId" : "2",
-        "tags" : "Relationship",
-        "technology" : "HTTP/JSON"
+        "technology" : "HTTPS"
       } ],
       "tags" : "Element,Person,Administrador"
     } ],
     "softwareSystems" : [ {
+      "description" : "Armazena imagens pesadas de perfil, fotos das salas e anexos enviados pelos usuários",
+      "documentation" : { },
+      "id" : "3",
+      "name" : "Armazenamento de Mídia",
+      "properties" : {
+        "structurizr.dsl.identifier" : "midia"
+      },
+      "tags" : "Element,Software System,Externo"
+    }, {
+      "description" : "Serviço externo para envio de confirmações, lembretes e cancelamentos de reservas.",
+      "documentation" : { },
+      "id" : "4",
+      "name" : "Sistema de E-mail",
+      "properties" : {
+        "structurizr.dsl.identifier" : "email"
+      },
+      "tags" : "Element,Software System,Externo"
+    }, {
       "containers" : [ {
+        "description" : "Fornece todas as funcionalidades de consulta, reserva de salas e gestão administrativa via dispositivos móveis.",
+        "documentation" : { },
+        "id" : "6",
+        "name" : "App Mobile (FrontEnd)",
+        "properties" : {
+          "structurizr.dsl.identifier" : "app"
+        },
+        "relationships" : [ {
+          "description" : "Faz chamadas de API para",
+          "destinationId" : "7",
+          "id" : "32",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JSON / HTTPS / JWT"
+        }, {
+          "description" : "Baixa/carrega imagens diretamente de",
+          "destinationId" : "3",
+          "id" : "33",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Cadastro, login e perfil",
+          "destinationId" : "11",
+          "id" : "39",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        }, {
+          "description" : "Consulta e administra salas",
+          "destinationId" : "12",
+          "id" : "40",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        }, {
+          "description" : "Consulta horários, cria e cancela reservas",
+          "destinationId" : "13",
+          "id" : "41",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "React Native / TypeScript"
+      }, {
         "components" : [ {
           "description" : "Abre o servidor HTTP na porta 3000.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "5",
+          "id" : "8",
           "name" : "Inicialização do servidor",
           "properties" : {
             "structurizr.dsl.identifier" : "bootstrap"
           },
           "relationships" : [ {
             "description" : "Inicia",
-            "destinationId" : "6",
-            "id" : "35",
-            "sourceId" : "5",
+            "destinationId" : "9",
+            "id" : "42",
+            "sourceId" : "8",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -406,28 +435,28 @@
           "description" : "Configura JSON, arquivos públicos, documentação Swagger e tratamento de erros.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "6",
+          "id" : "9",
           "name" : "Aplicação HTTP",
           "properties" : {
             "structurizr.dsl.identifier" : "httpApp"
           },
           "relationships" : [ {
             "description" : "Registra as rotas",
-            "destinationId" : "7",
-            "id" : "36",
-            "sourceId" : "6",
+            "destinationId" : "10",
+            "id" : "43",
+            "sourceId" : "9",
             "tags" : "Relationship"
           }, {
             "description" : "Disponibiliza /docs e /swagger.yaml",
-            "destinationId" : "15",
-            "id" : "37",
-            "sourceId" : "6",
+            "destinationId" : "18",
+            "id" : "44",
+            "sourceId" : "9",
             "tags" : "Relationship"
           }, {
             "description" : "Serve /public",
-            "destinationId" : "16",
-            "id" : "38",
-            "sourceId" : "6",
+            "destinationId" : "19",
+            "id" : "45",
+            "sourceId" : "9",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -436,28 +465,28 @@
           "description" : "Registra os módulos de rotas de usuários, salas e reservas.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "7",
+          "id" : "10",
           "name" : "Agregador de rotas",
           "properties" : {
             "structurizr.dsl.identifier" : "rotas"
           },
           "relationships" : [ {
             "description" : "Registra",
-            "destinationId" : "8",
-            "id" : "39",
-            "sourceId" : "7",
+            "destinationId" : "11",
+            "id" : "46",
+            "sourceId" : "10",
             "tags" : "Relationship"
           }, {
             "description" : "Registra",
-            "destinationId" : "9",
-            "id" : "40",
-            "sourceId" : "7",
+            "destinationId" : "12",
+            "id" : "47",
+            "sourceId" : "10",
             "tags" : "Relationship"
           }, {
             "description" : "Registra",
-            "destinationId" : "10",
-            "id" : "41",
-            "sourceId" : "7",
+            "destinationId" : "13",
+            "id" : "48",
+            "sourceId" : "10",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -466,22 +495,22 @@
           "description" : "Expõe cadastro, login e operações do próprio perfil.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "8",
+          "id" : "11",
           "name" : "Rotas de usuários",
           "properties" : {
             "structurizr.dsl.identifier" : "usuarioRoutes"
           },
           "relationships" : [ {
             "description" : "Encaminha operações de usuário",
-            "destinationId" : "12",
-            "id" : "42",
-            "sourceId" : "8",
+            "destinationId" : "15",
+            "id" : "49",
+            "sourceId" : "11",
             "tags" : "Relationship"
           }, {
             "description" : "Protege operações do perfil",
-            "destinationId" : "11",
-            "id" : "46",
-            "sourceId" : "8",
+            "destinationId" : "14",
+            "id" : "53",
+            "sourceId" : "11",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -490,22 +519,22 @@
           "description" : "Expõe consulta pública e operações administrativas de salas.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "9",
+          "id" : "12",
           "name" : "Rotas de salas",
           "properties" : {
             "structurizr.dsl.identifier" : "salaRoutes"
           },
           "relationships" : [ {
             "description" : "Encaminha operações de sala",
-            "destinationId" : "13",
-            "id" : "43",
-            "sourceId" : "9",
+            "destinationId" : "16",
+            "id" : "50",
+            "sourceId" : "12",
             "tags" : "Relationship"
           }, {
             "description" : "Protege operações administrativas",
-            "destinationId" : "11",
-            "id" : "45",
-            "sourceId" : "9",
+            "destinationId" : "14",
+            "id" : "52",
+            "sourceId" : "12",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -514,22 +543,22 @@
           "description" : "Expõe consulta de horários, criação, listagem e cancelamento.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "10",
+          "id" : "13",
           "name" : "Rotas de reservas",
           "properties" : {
             "structurizr.dsl.identifier" : "reservaRoutes"
           },
           "relationships" : [ {
             "description" : "Encaminha operações de reserva",
-            "destinationId" : "14",
-            "id" : "44",
-            "sourceId" : "10",
+            "destinationId" : "17",
+            "id" : "51",
+            "sourceId" : "13",
             "tags" : "Relationship"
           }, {
             "description" : "Protege operações autenticadas",
-            "destinationId" : "11",
-            "id" : "47",
-            "sourceId" : "10",
+            "destinationId" : "14",
+            "id" : "54",
+            "sourceId" : "13",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -538,7 +567,7 @@
           "description" : "Valida o bearer token e injeta o identificador e o tipo do usuário na requisição.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "11",
+          "id" : "14",
           "name" : "Autenticação JWT",
           "properties" : {
             "structurizr.dsl.identifier" : "authMiddleware"
@@ -549,24 +578,17 @@
           "description" : "Traduz requisições e respostas HTTP para operações de usuário.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "12",
+          "id" : "15",
           "name" : "Controller de usuários",
           "properties" : {
             "structurizr.dsl.identifier" : "usuarioController"
           },
           "relationships" : [ {
             "description" : "Executa casos de uso",
-            "destinationId" : "17",
-            "id" : "48",
-            "sourceId" : "12",
+            "destinationId" : "20",
+            "id" : "55",
+            "sourceId" : "15",
             "tags" : "Relationship"
-          }, {
-            "description" : "Responde com usuário e token",
-            "destinationId" : "1",
-            "id" : "51",
-            "sourceId" : "12",
-            "tags" : "Relationship",
-            "technology" : "HTTP/JSON"
           } ],
           "tags" : "Element,Component",
           "technology" : "src/controllers/usuarioController.js"
@@ -574,24 +596,17 @@
           "description" : "Traduz requisições e respostas HTTP para operações de sala.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "13",
+          "id" : "16",
           "name" : "Controller de salas",
           "properties" : {
             "structurizr.dsl.identifier" : "salaController"
           },
           "relationships" : [ {
             "description" : "Executa casos de uso",
-            "destinationId" : "18",
-            "id" : "49",
-            "sourceId" : "13",
+            "destinationId" : "21",
+            "id" : "56",
+            "sourceId" : "16",
             "tags" : "Relationship"
-          }, {
-            "description" : "Responde com dados das salas",
-            "destinationId" : "1",
-            "id" : "54",
-            "sourceId" : "13",
-            "tags" : "Relationship",
-            "technology" : "HTTP/JSON"
           } ],
           "tags" : "Element,Component",
           "technology" : "src/controllers/salaController.js"
@@ -599,24 +614,17 @@
           "description" : "Traduz requisições e respostas HTTP para operações de reserva.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "14",
+          "id" : "17",
           "name" : "Controller de reservas",
           "properties" : {
             "structurizr.dsl.identifier" : "reservaController"
           },
           "relationships" : [ {
             "description" : "Executa casos de uso",
-            "destinationId" : "19",
-            "id" : "50",
-            "sourceId" : "14",
+            "destinationId" : "22",
+            "id" : "57",
+            "sourceId" : "17",
             "tags" : "Relationship"
-          }, {
-            "description" : "Responde com horários ou reserva",
-            "destinationId" : "1",
-            "id" : "55",
-            "sourceId" : "14",
-            "tags" : "Relationship",
-            "technology" : "HTTP/JSON"
           } ],
           "tags" : "Element,Component",
           "technology" : "src/controllers/reservaController.js"
@@ -624,7 +632,7 @@
           "description" : "Publica o contrato OpenAPI e a interface Swagger UI.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "15",
+          "id" : "18",
           "name" : "Documentação da API",
           "properties" : {
             "structurizr.dsl.identifier" : "docsApi"
@@ -635,7 +643,7 @@
           "description" : "Entrega imagens estáticas das salas e dos espaços.",
           "documentation" : { },
           "group" : "Adaptadores de entrada",
-          "id" : "16",
+          "id" : "19",
           "name" : "Arquivos públicos",
           "properties" : {
             "structurizr.dsl.identifier" : "arquivosPublicos"
@@ -646,16 +654,16 @@
           "description" : "Valida cadastro e perfil, verifica credenciais e coordena a emissão de JWT.",
           "documentation" : { },
           "group" : "Aplicação e regras de negócio",
-          "id" : "17",
+          "id" : "20",
           "name" : "Casos de uso de usuários",
           "properties" : {
             "structurizr.dsl.identifier" : "usuarioService"
           },
           "relationships" : [ {
             "description" : "Consulta e persiste usuários",
-            "destinationId" : "20",
-            "id" : "56",
-            "sourceId" : "17",
+            "destinationId" : "23",
+            "id" : "58",
+            "sourceId" : "20",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -664,16 +672,16 @@
           "description" : "Aplica regras de cadastro, consulta, atualização e exclusão de salas.",
           "documentation" : { },
           "group" : "Aplicação e regras de negócio",
-          "id" : "18",
+          "id" : "21",
           "name" : "Casos de uso de salas",
           "properties" : {
             "structurizr.dsl.identifier" : "salaService"
           },
           "relationships" : [ {
             "description" : "Consulta e persiste salas",
-            "destinationId" : "21",
-            "id" : "57",
-            "sourceId" : "18",
+            "destinationId" : "24",
+            "id" : "59",
+            "sourceId" : "21",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -682,22 +690,22 @@
           "description" : "Aplica regras de disponibilidade, conflito de horário, autorização e cancelamento.",
           "documentation" : { },
           "group" : "Aplicação e regras de negócio",
-          "id" : "19",
+          "id" : "22",
           "name" : "Casos de uso de reservas",
           "properties" : {
             "structurizr.dsl.identifier" : "reservaService"
           },
           "relationships" : [ {
             "description" : "Consulta sala e valor por hora",
-            "destinationId" : "21",
-            "id" : "58",
-            "sourceId" : "19",
+            "destinationId" : "24",
+            "id" : "60",
+            "sourceId" : "22",
             "tags" : "Relationship"
           }, {
             "description" : "Consulta e persiste reservas",
-            "destinationId" : "22",
-            "id" : "59",
-            "sourceId" : "19",
+            "destinationId" : "25",
+            "id" : "61",
+            "sourceId" : "22",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -706,16 +714,16 @@
           "description" : "Persiste contas, valida unicidade de e-mail e cria o administrador inicial.",
           "documentation" : { },
           "group" : "Adaptadores de saída e persistência",
-          "id" : "20",
+          "id" : "23",
           "name" : "Repositório de usuários",
           "properties" : {
             "structurizr.dsl.identifier" : "usuarioRepository"
           },
           "relationships" : [ {
             "description" : "Executa consultas SQL",
-            "destinationId" : "23",
-            "id" : "60",
-            "sourceId" : "20",
+            "destinationId" : "26",
+            "id" : "62",
+            "sourceId" : "23",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -724,16 +732,16 @@
           "description" : "Persiste e consulta salas e verifica reservas futuras.",
           "documentation" : { },
           "group" : "Adaptadores de saída e persistência",
-          "id" : "21",
+          "id" : "24",
           "name" : "Repositório de salas",
           "properties" : {
             "structurizr.dsl.identifier" : "salaRepository"
           },
           "relationships" : [ {
             "description" : "Executa consultas SQL",
-            "destinationId" : "23",
-            "id" : "61",
-            "sourceId" : "21",
+            "destinationId" : "26",
+            "id" : "63",
+            "sourceId" : "24",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -742,16 +750,16 @@
           "description" : "Persiste reservas e consulta reservas por sala, data e usuário.",
           "documentation" : { },
           "group" : "Adaptadores de saída e persistência",
-          "id" : "22",
+          "id" : "25",
           "name" : "Repositório de reservas",
           "properties" : {
             "structurizr.dsl.identifier" : "reservaRepository"
           },
           "relationships" : [ {
             "description" : "Executa consultas SQL",
-            "destinationId" : "23",
-            "id" : "62",
-            "sourceId" : "22",
+            "destinationId" : "26",
+            "id" : "64",
+            "sourceId" : "25",
             "tags" : "Relationship"
           } ],
           "tags" : "Element,Component",
@@ -760,71 +768,85 @@
           "description" : "Abre database.db e fornece a conexão usada pelos repositórios.",
           "documentation" : { },
           "group" : "Adaptadores de saída e persistência",
-          "id" : "23",
+          "id" : "26",
           "name" : "Conexão SQLite",
           "properties" : {
             "structurizr.dsl.identifier" : "databaseAdapter"
           },
           "relationships" : [ {
             "description" : "Lê e grava",
-            "destinationId" : "24",
-            "id" : "63",
-            "sourceId" : "23",
+            "destinationId" : "27",
+            "id" : "65",
+            "sourceId" : "26",
             "tags" : "Relationship",
             "technology" : "SQLite"
           } ],
           "tags" : "Element,Component",
           "technology" : "src/repositories/database.js, better-sqlite3"
         } ],
-        "description" : "Expõe endpoints REST, autentica usuários e coordena as regras de aplicação.",
+        "description" : "Fornece a lógica de negócios de reservas e autenticação via API JSON/HTTPS, serve imagens estáticas (/public) e documentação Swagger (/docs).",
         "documentation" : { },
-        "id" : "4",
-        "name" : "API de Reservas",
+        "id" : "7",
+        "name" : "API (Backend)",
         "properties" : {
           "structurizr.dsl.identifier" : "api"
         },
         "relationships" : [ {
-          "description" : "Lê e grava os dados da aplicação",
-          "destinationId" : "24",
-          "id" : "34",
-          "sourceId" : "4",
+          "description" : "Realiza upload e obtém URLs de imagens em",
+          "destinationId" : "3",
+          "id" : "35",
+          "sourceId" : "7",
           "tags" : "Relationship",
-          "technology" : "SQLite"
+          "technology" : "HTTPS / API"
         }, {
-          "description" : "Responde com usuário e token",
-          "destinationId" : "1",
-          "id" : "52",
-          "linkedRelationshipId" : "51",
-          "sourceId" : "4",
-          "technology" : "HTTP/JSON"
+          "description" : "Dispara e-mails transacionais via",
+          "destinationId" : "4",
+          "id" : "36",
+          "sourceId" : "7",
+          "tags" : "Relationship",
+          "technology" : "SMTP / API"
+        }, {
+          "description" : "Lê e grava usuários, salas e reservas em",
+          "destinationId" : "27",
+          "id" : "38",
+          "sourceId" : "7",
+          "tags" : "Relationship",
+          "technology" : "SQL (better-sqlite3)"
         } ],
         "tags" : "Element,Container",
-        "technology" : "Node.js, Express 5, JavaScript ES modules"
+        "technology" : "Node.js, Express 5, JavaScript, bcrypt"
       }, {
-        "description" : "Armazena usuários, salas e reservas em um arquivo local.",
+        "description" : "Armazena usuários, salas e reservas",
         "documentation" : { },
-        "id" : "24",
-        "name" : "Banco de dados",
+        "id" : "27",
+        "name" : "Database",
         "properties" : {
           "structurizr.dsl.identifier" : "banco"
         },
         "tags" : "Element,Container,Database",
-        "technology" : "SQLite (database.db)"
+        "technology" : "SQLite3 (database.db)"
       } ],
-      "description" : "API para cadastro de usuários, gestão de salas e reservas de espaços de coworking.",
+      "description" : "Plataforma de reservas de salas e espaços de coworking.",
       "documentation" : { },
-      "id" : "3",
-      "name" : "Plataforma de Reservas Monte Horebe",
+      "id" : "5",
+      "name" : "MH Coworking",
       "properties" : {
         "structurizr.dsl.identifier" : "coworking"
       },
       "relationships" : [ {
-        "description" : "Responde com usuário e token",
-        "destinationId" : "1",
-        "id" : "53",
-        "linkedRelationshipId" : "51",
-        "sourceId" : "3",
-        "technology" : "HTTP/JSON"
+        "description" : "Baixa/carrega imagens diretamente de",
+        "destinationId" : "3",
+        "id" : "34",
+        "linkedRelationshipId" : "33",
+        "sourceId" : "5",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Dispara e-mails transacionais via",
+        "destinationId" : "4",
+        "id" : "37",
+        "linkedRelationshipId" : "36",
+        "sourceId" : "5",
+        "technology" : "SMTP / API"
       } ],
       "tags" : "Element,Software System"
     } ]
@@ -832,7 +854,7 @@
   "name" : "Coworking Monte Horebe",
   "properties" : {
     "structurizr.inspection.error" : "47",
-    "structurizr.dsl" : "d29ya3NwYWNlICJDb3dvcmtpbmcgTW9udGUgSG9yZWJlIiAiQXJxdWl0ZXR1cmEgQzQgZGEgQVBJIGRlIHJlc2VydmFzLCBvcmdhbml6YWRhIGVtIGNhbWFkYXMgZGUgQ2xlYW4gQXJjaGl0ZWN0dXJlIGNvbmZvcm1lIG8gY8OzZGlnbyBleGlzdGVudGUuIiB7CgogICAgbW9kZWwgewogICAgICAgIGNsaWVudGUgPSBwZXJzb24gIkNsaWVudGUiICJDb25zdWx0YSBzYWxhcyBlIGhvcsOhcmlvcywgY3JpYSBlIGFjb21wYW5oYSBhcyBwcsOzcHJpYXMgcmVzZXJ2YXMuIiB7CiAgICAgICAgICAgIHRhZ3MgIkNsaWVudGUiCiAgICAgICAgfQoKICAgICAgICBhZG1pbmlzdHJhZG9yID0gcGVyc29uICJBZG1pbmlzdHJhZG9yIiAiTWFudMOpbSBvIGNhdMOhbG9nbyBkZSBzYWxhcyBlIGNvbnN1bHRhIG91IGNhbmNlbGEgcmVzZXJ2YXMuIiB7CiAgICAgICAgICAgIHRhZ3MgIkFkbWluaXN0cmFkb3IiCiAgICAgICAgfQoKICAgICAgICBjb3dvcmtpbmcgPSBzb2Z0d2FyZVN5c3RlbSAiUGxhdGFmb3JtYSBkZSBSZXNlcnZhcyBNb250ZSBIb3JlYmUiICJBUEkgcGFyYSBjYWRhc3RybyBkZSB1c3XDoXJpb3MsIGdlc3TDo28gZGUgc2FsYXMgZSByZXNlcnZhcyBkZSBlc3Bhw6dvcyBkZSBjb3dvcmtpbmcuIiB7CiAgICAgICAgICAgIGFwaSA9IGNvbnRhaW5lciAiQVBJIGRlIFJlc2VydmFzIiAiRXhww7VlIGVuZHBvaW50cyBSRVNULCBhdXRlbnRpY2EgdXN1w6FyaW9zIGUgY29vcmRlbmEgYXMgcmVncmFzIGRlIGFwbGljYcOnw6NvLiIgIk5vZGUuanMsIEV4cHJlc3MgNSwgSmF2YVNjcmlwdCBFUyBtb2R1bGVzIiB7CiAgICAgICAgICAgICAgICBncm91cCAiQWRhcHRhZG9yZXMgZGUgZW50cmFkYSIgewogICAgICAgICAgICAgICAgICAgIGJvb3RzdHJhcCA9IGNvbXBvbmVudCAiSW5pY2lhbGl6YcOnw6NvIGRvIHNlcnZpZG9yIiAiQWJyZSBvIHNlcnZpZG9yIEhUVFAgbmEgcG9ydGEgMzAwMC4iICJzcmMvYXBwL3NlcnZlci5qcyIKICAgICAgICAgICAgICAgICAgICBodHRwQXBwID0gY29tcG9uZW50ICJBcGxpY2HDp8OjbyBIVFRQIiAiQ29uZmlndXJhIEpTT04sIGFycXVpdm9zIHDDumJsaWNvcywgZG9jdW1lbnRhw6fDo28gU3dhZ2dlciBlIHRyYXRhbWVudG8gZGUgZXJyb3MuIiAic3JjL2FwcC9BcHAuanMiCiAgICAgICAgICAgICAgICAgICAgcm90YXMgPSBjb21wb25lbnQgIkFncmVnYWRvciBkZSByb3RhcyIgIlJlZ2lzdHJhIG9zIG3Ds2R1bG9zIGRlIHJvdGFzIGRlIHVzdcOhcmlvcywgc2FsYXMgZSByZXNlcnZhcy4iICJzcmMvcm91dGVzL2luZGV4LmpzIgogICAgICAgICAgICAgICAgICAgIHVzdWFyaW9Sb3V0ZXMgPSBjb21wb25lbnQgIlJvdGFzIGRlIHVzdcOhcmlvcyIgIkV4cMO1ZSBjYWRhc3RybywgbG9naW4gZSBvcGVyYcOnw7VlcyBkbyBwcsOzcHJpbyBwZXJmaWwuIiAiRXhwcmVzcyBSb3V0ZXIiCiAgICAgICAgICAgICAgICAgICAgc2FsYVJvdXRlcyA9IGNvbXBvbmVudCAiUm90YXMgZGUgc2FsYXMiICJFeHDDtWUgY29uc3VsdGEgcMO6YmxpY2EgZSBvcGVyYcOnw7VlcyBhZG1pbmlzdHJhdGl2YXMgZGUgc2FsYXMuIiAiRXhwcmVzcyBSb3V0ZXIiCiAgICAgICAgICAgICAgICAgICAgcmVzZXJ2YVJvdXRlcyA9IGNvbXBvbmVudCAiUm90YXMgZGUgcmVzZXJ2YXMiICJFeHDDtWUgY29uc3VsdGEgZGUgaG9yw6FyaW9zLCBjcmlhw6fDo28sIGxpc3RhZ2VtIGUgY2FuY2VsYW1lbnRvLiIgIkV4cHJlc3MgUm91dGVyIgogICAgICAgICAgICAgICAgICAgIGF1dGhNaWRkbGV3YXJlID0gY29tcG9uZW50ICJBdXRlbnRpY2HDp8OjbyBKV1QiICJWYWxpZGEgbyBiZWFyZXIgdG9rZW4gZSBpbmpldGEgbyBpZGVudGlmaWNhZG9yIGUgbyB0aXBvIGRvIHVzdcOhcmlvIG5hIHJlcXVpc2nDp8Ojby4iICJzcmMvbWlkZGxld2FyZXMvYXV0aC5qcyIKICAgICAgICAgICAgICAgICAgICB1c3VhcmlvQ29udHJvbGxlciA9IGNvbXBvbmVudCAiQ29udHJvbGxlciBkZSB1c3XDoXJpb3MiICJUcmFkdXogcmVxdWlzacOnw7VlcyBlIHJlc3Bvc3RhcyBIVFRQIHBhcmEgb3BlcmHDp8O1ZXMgZGUgdXN1w6FyaW8uIiAic3JjL2NvbnRyb2xsZXJzL3VzdWFyaW9Db250cm9sbGVyLmpzIgogICAgICAgICAgICAgICAgICAgIHNhbGFDb250cm9sbGVyID0gY29tcG9uZW50ICJDb250cm9sbGVyIGRlIHNhbGFzIiAiVHJhZHV6IHJlcXVpc2nDp8O1ZXMgZSByZXNwb3N0YXMgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHNhbGEuIiAic3JjL2NvbnRyb2xsZXJzL3NhbGFDb250cm9sbGVyLmpzIgogICAgICAgICAgICAgICAgICAgIHJlc2VydmFDb250cm9sbGVyID0gY29tcG9uZW50ICJDb250cm9sbGVyIGRlIHJlc2VydmFzIiAiVHJhZHV6IHJlcXVpc2nDp8O1ZXMgZSByZXNwb3N0YXMgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHJlc2VydmEuIiAic3JjL2NvbnRyb2xsZXJzL3Jlc2VydmFDb250cm9sbGVyLmpzIgogICAgICAgICAgICAgICAgICAgIGRvY3NBcGkgPSBjb21wb25lbnQgIkRvY3VtZW50YcOnw6NvIGRhIEFQSSIgIlB1YmxpY2EgbyBjb250cmF0byBPcGVuQVBJIGUgYSBpbnRlcmZhY2UgU3dhZ2dlciBVSS4iICJzd2FnZ2VyLnlhbWwsIHN3YWdnZXItdWktZXhwcmVzcyIKICAgICAgICAgICAgICAgICAgICBhcnF1aXZvc1B1YmxpY29zID0gY29tcG9uZW50ICJBcnF1aXZvcyBww7pibGljb3MiICJFbnRyZWdhIGltYWdlbnMgZXN0w6F0aWNhcyBkYXMgc2FsYXMgZSBkb3MgZXNwYcOnb3MuIiAiRGlyZXTDs3JpbyBwdWJsaWMvIgogICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgIGdyb3VwICJBcGxpY2HDp8OjbyBlIHJlZ3JhcyBkZSBuZWfDs2NpbyIgewogICAgICAgICAgICAgICAgICAgIHVzdWFyaW9TZXJ2aWNlID0gY29tcG9uZW50ICJDYXNvcyBkZSB1c28gZGUgdXN1w6FyaW9zIiAiVmFsaWRhIGNhZGFzdHJvIGUgcGVyZmlsLCB2ZXJpZmljYSBjcmVkZW5jaWFpcyBlIGNvb3JkZW5hIGEgZW1pc3PDo28gZGUgSldULiIgInNyYy9zZXJ2aWNlcy91c3VhcmlvU2VydmljZS5qcyIKICAgICAgICAgICAgICAgICAgICBzYWxhU2VydmljZSA9IGNvbXBvbmVudCAiQ2Fzb3MgZGUgdXNvIGRlIHNhbGFzIiAiQXBsaWNhIHJlZ3JhcyBkZSBjYWRhc3RybywgY29uc3VsdGEsIGF0dWFsaXphw6fDo28gZSBleGNsdXPDo28gZGUgc2FsYXMuIiAic3JjL3NlcnZpY2VzL3NhbGFTZXJ2aWNlLmpzIgogICAgICAgICAgICAgICAgICAgIHJlc2VydmFTZXJ2aWNlID0gY29tcG9uZW50ICJDYXNvcyBkZSB1c28gZGUgcmVzZXJ2YXMiICJBcGxpY2EgcmVncmFzIGRlIGRpc3BvbmliaWxpZGFkZSwgY29uZmxpdG8gZGUgaG9yw6FyaW8sIGF1dG9yaXphw6fDo28gZSBjYW5jZWxhbWVudG8uIiAic3JjL3NlcnZpY2VzL3Jlc2VydmFTZXJ2aWNlLmpzIgogICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgICAgIGdyb3VwICJBZGFwdGFkb3JlcyBkZSBzYcOtZGEgZSBwZXJzaXN0w6puY2lhIiB7CiAgICAgICAgICAgICAgICAgICAgdXN1YXJpb1JlcG9zaXRvcnkgPSBjb21wb25lbnQgIlJlcG9zaXTDs3JpbyBkZSB1c3XDoXJpb3MiICJQZXJzaXN0ZSBjb250YXMsIHZhbGlkYSB1bmljaWRhZGUgZGUgZS1tYWlsIGUgY3JpYSBvIGFkbWluaXN0cmFkb3IgaW5pY2lhbC4iICJzcmMvcmVwb3NpdG9yaWVzL3VzdWFyaW9SZXBvc2l0b3J5LmpzIgogICAgICAgICAgICAgICAgICAgIHNhbGFSZXBvc2l0b3J5ID0gY29tcG9uZW50ICJSZXBvc2l0w7NyaW8gZGUgc2FsYXMiICJQZXJzaXN0ZSBlIGNvbnN1bHRhIHNhbGFzIGUgdmVyaWZpY2EgcmVzZXJ2YXMgZnV0dXJhcy4iICJzcmMvcmVwb3NpdG9yaWVzL3NhbGFSZXBvc2l0b3J5LmpzIgogICAgICAgICAgICAgICAgICAgIHJlc2VydmFSZXBvc2l0b3J5ID0gY29tcG9uZW50ICJSZXBvc2l0w7NyaW8gZGUgcmVzZXJ2YXMiICJQZXJzaXN0ZSByZXNlcnZhcyBlIGNvbnN1bHRhIHJlc2VydmFzIHBvciBzYWxhLCBkYXRhIGUgdXN1w6FyaW8uIiAic3JjL3JlcG9zaXRvcmllcy9yZXNlcnZhUmVwb3NpdG9yeS5qcyIKICAgICAgICAgICAgICAgICAgICBkYXRhYmFzZUFkYXB0ZXIgPSBjb21wb25lbnQgIkNvbmV4w6NvIFNRTGl0ZSIgIkFicmUgZGF0YWJhc2UuZGIgZSBmb3JuZWNlIGEgY29uZXjDo28gdXNhZGEgcGVsb3MgcmVwb3NpdMOzcmlvcy4iICJzcmMvcmVwb3NpdG9yaWVzL2RhdGFiYXNlLmpzLCBiZXR0ZXItc3FsaXRlMyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQoKICAgICAgICAgICAgYmFuY28gPSBjb250YWluZXIgIkJhbmNvIGRlIGRhZG9zIiAiQXJtYXplbmEgdXN1w6FyaW9zLCBzYWxhcyBlIHJlc2VydmFzIGVtIHVtIGFycXVpdm8gbG9jYWwuIiAiU1FMaXRlIChkYXRhYmFzZS5kYikiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGFiYXNlIgogICAgICAgICAgICB9CgogICAgICAgICAgICBjbGllbnRlIC0+IGFwaSAiVXNhIGEgQVBJIHBhcmEgY29uc3VsdGFyIHNhbGFzIGUgcmVzZXJ2YXIgZXNwYcOnb3MiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGFkbWluaXN0cmFkb3IgLT4gYXBpICJBZG1pbmlzdHJhIHNhbGFzIGUgcmVzZXJ2YXMiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGNsaWVudGUgLT4gdXN1YXJpb1JvdXRlcyAiQ2FkYXN0cmEtc2UgZSBhdXRlbnRpY2Etc2UiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGNsaWVudGUgLT4gc2FsYVJvdXRlcyAiQ29uc3VsdGEgc2FsYXMiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGNsaWVudGUgLT4gcmVzZXJ2YVJvdXRlcyAiQ29uc3VsdGEgaG9yw6FyaW9zIGUgc29saWNpdGEgcmVzZXJ2YXMiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGFkbWluaXN0cmFkb3IgLT4gc2FsYVJvdXRlcyAiQWRtaW5pc3RyYSBzYWxhcyIgIkhUVFAvSlNPTiIKICAgICAgICAgICAgYWRtaW5pc3RyYWRvciAtPiByZXNlcnZhUm91dGVzICJDb25zdWx0YSBlIGNhbmNlbGEgcmVzZXJ2YXMiICJIVFRQL0pTT04iCiAgICAgICAgICAgIGFwaSAtPiBiYW5jbyAiTMOqIGUgZ3JhdmEgb3MgZGFkb3MgZGEgYXBsaWNhw6fDo28iICJTUUxpdGUiCgogICAgICAgICAgICBib290c3RyYXAgLT4gaHR0cEFwcCAiSW5pY2lhIgogICAgICAgICAgICBodHRwQXBwIC0+IHJvdGFzICJSZWdpc3RyYSBhcyByb3RhcyIKICAgICAgICAgICAgaHR0cEFwcCAtPiBkb2NzQXBpICJEaXNwb25pYmlsaXphIC9kb2NzIGUgL3N3YWdnZXIueWFtbCIKICAgICAgICAgICAgaHR0cEFwcCAtPiBhcnF1aXZvc1B1YmxpY29zICJTZXJ2ZSAvcHVibGljIgogICAgICAgICAgICByb3RhcyAtPiB1c3VhcmlvUm91dGVzICJSZWdpc3RyYSIKICAgICAgICAgICAgcm90YXMgLT4gc2FsYVJvdXRlcyAiUmVnaXN0cmEiCiAgICAgICAgICAgIHJvdGFzIC0+IHJlc2VydmFSb3V0ZXMgIlJlZ2lzdHJhIgogICAgICAgICAgICB1c3VhcmlvUm91dGVzIC0+IHVzdWFyaW9Db250cm9sbGVyICJFbmNhbWluaGEgb3BlcmHDp8O1ZXMgZGUgdXN1w6FyaW8iCiAgICAgICAgICAgIHNhbGFSb3V0ZXMgLT4gc2FsYUNvbnRyb2xsZXIgIkVuY2FtaW5oYSBvcGVyYcOnw7VlcyBkZSBzYWxhIgogICAgICAgICAgICByZXNlcnZhUm91dGVzIC0+IHJlc2VydmFDb250cm9sbGVyICJFbmNhbWluaGEgb3BlcmHDp8O1ZXMgZGUgcmVzZXJ2YSIKICAgICAgICAgICAgc2FsYVJvdXRlcyAtPiBhdXRoTWlkZGxld2FyZSAiUHJvdGVnZSBvcGVyYcOnw7VlcyBhZG1pbmlzdHJhdGl2YXMiCiAgICAgICAgICAgIHVzdWFyaW9Sb3V0ZXMgLT4gYXV0aE1pZGRsZXdhcmUgIlByb3RlZ2Ugb3BlcmHDp8O1ZXMgZG8gcGVyZmlsIgogICAgICAgICAgICByZXNlcnZhUm91dGVzIC0+IGF1dGhNaWRkbGV3YXJlICJQcm90ZWdlIG9wZXJhw6fDtWVzIGF1dGVudGljYWRhcyIKICAgICAgICAgICAgdXN1YXJpb0NvbnRyb2xsZXIgLT4gdXN1YXJpb1NlcnZpY2UgIkV4ZWN1dGEgY2Fzb3MgZGUgdXNvIgogICAgICAgICAgICBzYWxhQ29udHJvbGxlciAtPiBzYWxhU2VydmljZSAiRXhlY3V0YSBjYXNvcyBkZSB1c28iCiAgICAgICAgICAgIHJlc2VydmFDb250cm9sbGVyIC0+IHJlc2VydmFTZXJ2aWNlICJFeGVjdXRhIGNhc29zIGRlIHVzbyIKICAgICAgICAgICAgdXN1YXJpb0NvbnRyb2xsZXIgLT4gY2xpZW50ZSAiUmVzcG9uZGUgY29tIHVzdcOhcmlvIGUgdG9rZW4iICJIVFRQL0pTT04iCiAgICAgICAgICAgIHNhbGFDb250cm9sbGVyIC0+IGNsaWVudGUgIlJlc3BvbmRlIGNvbSBkYWRvcyBkYXMgc2FsYXMiICJIVFRQL0pTT04iCiAgICAgICAgICAgIHJlc2VydmFDb250cm9sbGVyIC0+IGNsaWVudGUgIlJlc3BvbmRlIGNvbSBob3LDoXJpb3Mgb3UgcmVzZXJ2YSIgIkhUVFAvSlNPTiIKICAgICAgICAgICAgdXN1YXJpb1NlcnZpY2UgLT4gdXN1YXJpb1JlcG9zaXRvcnkgIkNvbnN1bHRhIGUgcGVyc2lzdGUgdXN1w6FyaW9zIgogICAgICAgICAgICBzYWxhU2VydmljZSAtPiBzYWxhUmVwb3NpdG9yeSAiQ29uc3VsdGEgZSBwZXJzaXN0ZSBzYWxhcyIKICAgICAgICAgICAgcmVzZXJ2YVNlcnZpY2UgLT4gc2FsYVJlcG9zaXRvcnkgIkNvbnN1bHRhIHNhbGEgZSB2YWxvciBwb3IgaG9yYSIKICAgICAgICAgICAgcmVzZXJ2YVNlcnZpY2UgLT4gcmVzZXJ2YVJlcG9zaXRvcnkgIkNvbnN1bHRhIGUgcGVyc2lzdGUgcmVzZXJ2YXMiCiAgICAgICAgICAgIHVzdWFyaW9SZXBvc2l0b3J5IC0+IGRhdGFiYXNlQWRhcHRlciAiRXhlY3V0YSBjb25zdWx0YXMgU1FMIgogICAgICAgICAgICBzYWxhUmVwb3NpdG9yeSAtPiBkYXRhYmFzZUFkYXB0ZXIgIkV4ZWN1dGEgY29uc3VsdGFzIFNRTCIKICAgICAgICAgICAgcmVzZXJ2YVJlcG9zaXRvcnkgLT4gZGF0YWJhc2VBZGFwdGVyICJFeGVjdXRhIGNvbnN1bHRhcyBTUUwiCiAgICAgICAgICAgIGRhdGFiYXNlQWRhcHRlciAtPiBiYW5jbyAiTMOqIGUgZ3JhdmEiICJTUUxpdGUiCiAgICAgICAgfQoKICAgICAgICBjb2RlU2VydmVyID0gZWxlbWVudCAic3JjL2FwcC9zZXJ2ZXIuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJQb250byBkZSBlbnRyYWRhOyBpbmljaWEgbyBzZXJ2aWRvciBuYSBwb3J0YSAzMDAwLiIgIkNvZGUiCiAgICAgICAgY29kZUFwcCA9IGVsZW1lbnQgInNyYy9hcHAvQXBwLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQ29uZmlndXJhIG8gRXhwcmVzcywgU3dhZ2dlciBVSSwgYXJxdWl2b3MgZXN0w6F0aWNvcywgcm90YXMgZSBlcnJvcy4iICJDb2RlIgogICAgICAgIGNvZGVSb3V0ZXMgPSBlbGVtZW50ICJzcmMvcm91dGVzL2luZGV4LmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQWdyZWdhIG9zIG3Ds2R1bG9zIGRlIHJvdGFzLiIgIkNvZGUiCiAgICAgICAgY29kZVVzdWFyaW9Sb3V0ZXMgPSBlbGVtZW50ICJzcmMvcm91dGVzL3VzdWFyaW9Sb3V0ZXMuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJSb3RhcyBkZSBjYWRhc3RybywgbG9naW4gZSBwZXJmaWwuIiAiQ29kZSIKICAgICAgICBjb2RlU2FsYVJvdXRlcyA9IGVsZW1lbnQgInNyYy9yb3V0ZXMvc2FsYVJvdXRlcy5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIlJvdGFzIGRlIGNvbnN1bHRhIGUgYWRtaW5pc3RyYcOnw6NvIGRlIHNhbGFzLiIgIkNvZGUiCiAgICAgICAgY29kZVJlc2VydmFSb3V0ZXMgPSBlbGVtZW50ICJzcmMvcm91dGVzL3Jlc2VydmFSb3V0ZXMuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJSb3RhcyBkZSBob3LDoXJpb3MgZSByZXNlcnZhcy4iICJDb2RlIgogICAgICAgIGNvZGVBdXRoID0gZWxlbWVudCAic3JjL21pZGRsZXdhcmVzL2F1dGguanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJNaWRkbGV3YXJlIGRlIGF1dGVudGljYcOnw6NvIGJlYXJlciBKV1QuIiAiQ29kZSIKICAgICAgICBjb2RlVXN1YXJpb0NvbnRyb2xsZXIgPSBlbGVtZW50ICJzcmMvY29udHJvbGxlcnMvdXN1YXJpb0NvbnRyb2xsZXIuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZGFwdGFkb3IgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHVzdcOhcmlvLiIgIkNvZGUiCiAgICAgICAgY29kZVNhbGFDb250cm9sbGVyID0gZWxlbWVudCAic3JjL2NvbnRyb2xsZXJzL3NhbGFDb250cm9sbGVyLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQWRhcHRhZG9yIEhUVFAgcGFyYSBvcGVyYcOnw7VlcyBkZSBzYWxhLiIgIkNvZGUiCiAgICAgICAgY29kZVJlc2VydmFDb250cm9sbGVyID0gZWxlbWVudCAic3JjL2NvbnRyb2xsZXJzL3Jlc2VydmFDb250cm9sbGVyLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQWRhcHRhZG9yIEhUVFAgcGFyYSBvcGVyYcOnw7VlcyBkZSByZXNlcnZhLiIgIkNvZGUiCiAgICAgICAgY29kZVVzdWFyaW9TZXJ2aWNlID0gZWxlbWVudCAic3JjL3NlcnZpY2VzL3VzdWFyaW9TZXJ2aWNlLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiUmVncmFzIGUgY2Fzb3MgZGUgdXNvIGRlIHVzdcOhcmlvLiIgIkNvZGUiCiAgICAgICAgY29kZVNhbGFTZXJ2aWNlID0gZWxlbWVudCAic3JjL3NlcnZpY2VzL3NhbGFTZXJ2aWNlLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiUmVncmFzIGUgY2Fzb3MgZGUgdXNvIGRlIHNhbGEuIiAiQ29kZSIKICAgICAgICBjb2RlUmVzZXJ2YVNlcnZpY2UgPSBlbGVtZW50ICJzcmMvc2VydmljZXMvcmVzZXJ2YVNlcnZpY2UuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJSZWdyYXMgZSBjYXNvcyBkZSB1c28gZGUgcmVzZXJ2YS4iICJDb2RlIgogICAgICAgIGNvZGVVc3VhcmlvUmVwb3NpdG9yeSA9IGVsZW1lbnQgInNyYy9yZXBvc2l0b3JpZXMvdXN1YXJpb1JlcG9zaXRvcnkuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZGFwdGFkb3IgZGUgcGVyc2lzdMOqbmNpYSBkZSB1c3XDoXJpby4iICJDb2RlIgogICAgICAgIGNvZGVTYWxhUmVwb3NpdG9yeSA9IGVsZW1lbnQgInNyYy9yZXBvc2l0b3JpZXMvc2FsYVJlcG9zaXRvcnkuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZGFwdGFkb3IgZGUgcGVyc2lzdMOqbmNpYSBkZSBzYWxhLiIgIkNvZGUiCiAgICAgICAgY29kZVJlc2VydmFSZXBvc2l0b3J5ID0gZWxlbWVudCAic3JjL3JlcG9zaXRvcmllcy9yZXNlcnZhUmVwb3NpdG9yeS5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIkFkYXB0YWRvciBkZSBwZXJzaXN0w6puY2lhIGRlIHJlc2VydmEuIiAiQ29kZSIKICAgICAgICBjb2RlRGF0YWJhc2UgPSBlbGVtZW50ICJzcmMvcmVwb3NpdG9yaWVzL2RhdGFiYXNlLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQ29uZXjDo28gYmV0dGVyLXNxbGl0ZTMgY29tIGRhdGFiYXNlLmRiLiIgIkNvZGUiCgogICAgICAgIGNvZGVTZXJ2ZXIgLT4gY29kZUFwcCAiSW1wb3J0YSBhIGFwbGljYcOnw6NvIgogICAgICAgIGNvZGVBcHAgLT4gY29kZVJvdXRlcyAiUmVnaXN0cmEgYXMgcm90YXMiCiAgICAgICAgY29kZVJvdXRlcyAtPiBjb2RlVXN1YXJpb1JvdXRlcyAiQWdyZWdhIgogICAgICAgIGNvZGVSb3V0ZXMgLT4gY29kZVNhbGFSb3V0ZXMgIkFncmVnYSIKICAgICAgICBjb2RlUm91dGVzIC0+IGNvZGVSZXNlcnZhUm91dGVzICJBZ3JlZ2EiCiAgICAgICAgY29kZVVzdWFyaW9Sb3V0ZXMgLT4gY29kZVVzdWFyaW9Db250cm9sbGVyICJFbmNhbWluaGEgcmVxdWlzacOnw7VlcyIKICAgICAgICBjb2RlU2FsYVJvdXRlcyAtPiBjb2RlU2FsYUNvbnRyb2xsZXIgIkVuY2FtaW5oYSByZXF1aXNpw6fDtWVzIgogICAgICAgIGNvZGVSZXNlcnZhUm91dGVzIC0+IGNvZGVSZXNlcnZhQ29udHJvbGxlciAiRW5jYW1pbmhhIHJlcXVpc2nDp8O1ZXMiCiAgICAgICAgY29kZVVzdWFyaW9Sb3V0ZXMgLT4gY29kZUF1dGggIlByb3RlZ2Ugb3BlcmHDp8O1ZXMgZGUgcGVyZmlsIgogICAgICAgIGNvZGVTYWxhUm91dGVzIC0+IGNvZGVBdXRoICJQcm90ZWdlIG9wZXJhw6fDtWVzIGFkbWluaXN0cmF0aXZhcyIKICAgICAgICBjb2RlUmVzZXJ2YVJvdXRlcyAtPiBjb2RlQXV0aCAiUHJvdGVnZSBvcGVyYcOnw7VlcyBhdXRlbnRpY2FkYXMiCiAgICAgICAgY29kZVVzdWFyaW9Db250cm9sbGVyIC0+IGNvZGVVc3VhcmlvU2VydmljZSAiSW52b2NhIgogICAgICAgIGNvZGVTYWxhQ29udHJvbGxlciAtPiBjb2RlU2FsYVNlcnZpY2UgIkludm9jYSIKICAgICAgICBjb2RlUmVzZXJ2YUNvbnRyb2xsZXIgLT4gY29kZVJlc2VydmFTZXJ2aWNlICJJbnZvY2EiCiAgICAgICAgY29kZVVzdWFyaW9TZXJ2aWNlIC0+IGNvZGVVc3VhcmlvUmVwb3NpdG9yeSAiVXNhIgogICAgICAgIGNvZGVTYWxhU2VydmljZSAtPiBjb2RlU2FsYVJlcG9zaXRvcnkgIlVzYSIKICAgICAgICBjb2RlUmVzZXJ2YVNlcnZpY2UgLT4gY29kZVNhbGFSZXBvc2l0b3J5ICJDb25zdWx0YSBzYWxhIgogICAgICAgIGNvZGVSZXNlcnZhU2VydmljZSAtPiBjb2RlUmVzZXJ2YVJlcG9zaXRvcnkgIkNvbnN1bHRhIGUgcGVyc2lzdGUiCiAgICAgICAgY29kZVVzdWFyaW9SZXBvc2l0b3J5IC0+IGNvZGVEYXRhYmFzZSAiVXNhIGEgY29uZXjDo28iCiAgICAgICAgY29kZVNhbGFSZXBvc2l0b3J5IC0+IGNvZGVEYXRhYmFzZSAiVXNhIGEgY29uZXjDo28iCiAgICAgICAgY29kZVJlc2VydmFSZXBvc2l0b3J5IC0+IGNvZGVEYXRhYmFzZSAiVXNhIGEgY29uZXjDo28iCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgY293b3JraW5nICJDMS1jb250ZXh0byIgewogICAgICAgICAgICB0aXRsZSAiQzEg4oCUIENvbnRleHRvIGRvIHNpc3RlbWEiCiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgY293b3JraW5nICJDMi1jb250YWluZXJzIiB7CiAgICAgICAgICAgIHRpdGxlICJDMiDigJQgQ29udGFpbmVycyIKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbXBvbmVudCBhcGkgIkMzLWNvbXBvbmVudGVzIiB7CiAgICAgICAgICAgIHRpdGxlICJDMyDigJQgQ29tcG9uZW50ZXMgZGEgQVBJIChDbGVhbiBBcmNoaXRlY3R1cmUpIgogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dCBsciAyNTAgMTgwCiAgICAgICAgfQoKICAgICAgICBjdXN0b20gIkM0LWNvZGlnbyIgewogICAgICAgICAgICB0aXRsZSAiQzQg4oCUIEPDs2RpZ286IG3Ds2R1bG9zIGUgZGVwZW5kw6puY2lhcyIKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hcGEgZG9zIGFycXVpdm9zIEphdmFTY3JpcHQgZXhpc3RlbnRlcy4gTm8gcmVwb3NpdMOzcmlvLCByZWdyYXMgZGUgbmVnw7NjaW8gZXN0w6NvIG5vcyBzZXJ2aWNlczsgbsOjbyBow6EgbcOzZHVsb3Mgc2VwYXJhZG9zIGRlIGVudGlkYWRlcyBuZW0gaW50ZXJmYWNlcyBleHBsw61jaXRhcyBkZSBwb3J0YXMuIgogICAgICAgICAgICBpbmNsdWRlIGNvZGVTZXJ2ZXIgY29kZUFwcCBjb2RlUm91dGVzIGNvZGVVc3VhcmlvUm91dGVzIGNvZGVTYWxhUm91dGVzIGNvZGVSZXNlcnZhUm91dGVzIGNvZGVBdXRoIGNvZGVVc3VhcmlvQ29udHJvbGxlciBjb2RlU2FsYUNvbnRyb2xsZXIgY29kZVJlc2VydmFDb250cm9sbGVyIGNvZGVVc3VhcmlvU2VydmljZSBjb2RlU2FsYVNlcnZpY2UgY29kZVJlc2VydmFTZXJ2aWNlIGNvZGVVc3VhcmlvUmVwb3NpdG9yeSBjb2RlU2FsYVJlcG9zaXRvcnkgY29kZVJlc2VydmFSZXBvc2l0b3J5IGNvZGVEYXRhYmFzZQogICAgICAgICAgICBhdXRvTGF5b3V0IGxyIDI1MCAxODAKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIkNsaWVudGUiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiMxZDRlZDgiCiAgICAgICAgICAgICAgICBjb2xvciAiI2ZmZmZmZiIKICAgICAgICAgICAgICAgIHNoYXBlIFBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkFkbWluaXN0cmFkb3IiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiM3YzNhZWQiCiAgICAgICAgICAgICAgICBjb2xvciAiI2ZmZmZmZiIKICAgICAgICAgICAgICAgIHNoYXBlIFBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzBmNzY2ZSIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzBlNzQ5MCIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbXBvbmVudCIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzI1NjNlYiIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjNDc1NTY5IgogICAgICAgICAgICAgICAgY29sb3IgIiNmZmZmZmYiCiAgICAgICAgICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvZGUiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiMzMzQxNTUiCiAgICAgICAgICAgICAgICBjb2xvciAiI2ZmZmZmZiIKICAgICAgICAgICAgICAgIHNoYXBlIENvbXBvbmVudAogICAgICAgICAgICB9CiAgICAgICAgICAgIHJlbGF0aW9uc2hpcCAiUmVsYXRpb25zaGlwIiB7CiAgICAgICAgICAgICAgICBjb2xvciAiIzQ3NTU2OSIKICAgICAgICAgICAgICAgIHRoaWNrbmVzcyAyCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9Cn0=",
+    "structurizr.dsl" : "d29ya3NwYWNlICJDb3dvcmtpbmcgTW9udGUgSG9yZWJlIiAiQXJxdWl0ZXR1cmEgQzQgZGEgQVBJIGRlIHJlc2VydmFzLCBvcmdhbml6YWRhIGVtIGNhbWFkYXMgZGUgQ2xlYW4gQXJjaGl0ZWN0dXJlIGNvbmZvcm1lIG8gY8OzZGlnbyBleGlzdGVudGUuIiB7CgogICAgbW9kZWwgewogICAgICAgIGNsaWVudGUgPSBwZXJzb24gIkNsaWVudGUiICJDb25zdWx0YSBzYWxhcywgaG9yw6FyaW9zIGUgZmF6L2NhbmNlbGEgcmVzZXJ2YXMiIHsKICAgICAgICAgICAgdGFncyAiQ2xpZW50ZSIKICAgICAgICB9CgogICAgICAgIGFkbWluaXN0cmFkb3IgPSBwZXJzb24gIkFkbWluaXN0cmFkb3IiICJHZXJlbmNpYSBzYWxhcyBlIGFjb21wYW5oYSByZXNlcnZhcyIgewogICAgICAgICAgICB0YWdzICJBZG1pbmlzdHJhZG9yIgogICAgICAgIH0KCiAgICAgICAgbWlkaWEgPSBzb2Z0d2FyZVN5c3RlbSAiQXJtYXplbmFtZW50byBkZSBNw61kaWEiICJBcm1hemVuYSBpbWFnZW5zIHBlc2FkYXMgZGUgcGVyZmlsLCBmb3RvcyBkYXMgc2FsYXMgZSBhbmV4b3MgZW52aWFkb3MgcGVsb3MgdXN1w6FyaW9zIiB7CiAgICAgICAgICAgIHRhZ3MgIkV4dGVybm8iCiAgICAgICAgfQoKICAgICAgICBlbWFpbCA9IHNvZnR3YXJlU3lzdGVtICJTaXN0ZW1hIGRlIEUtbWFpbCIgIlNlcnZpw6dvIGV4dGVybm8gcGFyYSBlbnZpbyBkZSBjb25maXJtYcOnw7VlcywgbGVtYnJldGVzIGUgY2FuY2VsYW1lbnRvcyBkZSByZXNlcnZhcy4iIHsKICAgICAgICAgICAgdGFncyAiRXh0ZXJubyIKICAgICAgICB9CgogICAgICAgIGNvd29ya2luZyA9IHNvZnR3YXJlU3lzdGVtICJNSCBDb3dvcmtpbmciICJQbGF0YWZvcm1hIGRlIHJlc2VydmFzIGRlIHNhbGFzIGUgZXNwYcOnb3MgZGUgY293b3JraW5nLiIgewogICAgICAgICAgICBhcHAgPSBjb250YWluZXIgIkFwcCBNb2JpbGUgKEZyb250RW5kKSIgIkZvcm5lY2UgdG9kYXMgYXMgZnVuY2lvbmFsaWRhZGVzIGRlIGNvbnN1bHRhLCByZXNlcnZhIGRlIHNhbGFzIGUgZ2VzdMOjbyBhZG1pbmlzdHJhdGl2YSB2aWEgZGlzcG9zaXRpdm9zIG3Ds3ZlaXMuIiAiUmVhY3QgTmF0aXZlIC8gVHlwZVNjcmlwdCIKCiAgICAgICAgICAgIGFwaSA9IGNvbnRhaW5lciAiQVBJIChCYWNrZW5kKSIgIkZvcm5lY2UgYSBsw7NnaWNhIGRlIG5lZ8OzY2lvcyBkZSByZXNlcnZhcyBlIGF1dGVudGljYcOnw6NvIHZpYSBBUEkgSlNPTi9IVFRQUywgc2VydmUgaW1hZ2VucyBlc3TDoXRpY2FzICgvcHVibGljKSBlIGRvY3VtZW50YcOnw6NvIFN3YWdnZXIgKC9kb2NzKS4iICJOb2RlLmpzLCBFeHByZXNzIDUsIEphdmFTY3JpcHQsIGJjcnlwdCIgewogICAgICAgICAgICAgICAgZ3JvdXAgIkFkYXB0YWRvcmVzIGRlIGVudHJhZGEiIHsKICAgICAgICAgICAgICAgICAgICBib290c3RyYXAgPSBjb21wb25lbnQgIkluaWNpYWxpemHDp8OjbyBkbyBzZXJ2aWRvciIgIkFicmUgbyBzZXJ2aWRvciBIVFRQIG5hIHBvcnRhIDMwMDAuIiAic3JjL2FwcC9zZXJ2ZXIuanMiCiAgICAgICAgICAgICAgICAgICAgaHR0cEFwcCA9IGNvbXBvbmVudCAiQXBsaWNhw6fDo28gSFRUUCIgIkNvbmZpZ3VyYSBKU09OLCBhcnF1aXZvcyBww7pibGljb3MsIGRvY3VtZW50YcOnw6NvIFN3YWdnZXIgZSB0cmF0YW1lbnRvIGRlIGVycm9zLiIgInNyYy9hcHAvQXBwLmpzIgogICAgICAgICAgICAgICAgICAgIHJvdGFzID0gY29tcG9uZW50ICJBZ3JlZ2Fkb3IgZGUgcm90YXMiICJSZWdpc3RyYSBvcyBtw7NkdWxvcyBkZSByb3RhcyBkZSB1c3XDoXJpb3MsIHNhbGFzIGUgcmVzZXJ2YXMuIiAic3JjL3JvdXRlcy9pbmRleC5qcyIKICAgICAgICAgICAgICAgICAgICB1c3VhcmlvUm91dGVzID0gY29tcG9uZW50ICJSb3RhcyBkZSB1c3XDoXJpb3MiICJFeHDDtWUgY2FkYXN0cm8sIGxvZ2luIGUgb3BlcmHDp8O1ZXMgZG8gcHLDs3ByaW8gcGVyZmlsLiIgIkV4cHJlc3MgUm91dGVyIgogICAgICAgICAgICAgICAgICAgIHNhbGFSb3V0ZXMgPSBjb21wb25lbnQgIlJvdGFzIGRlIHNhbGFzIiAiRXhww7VlIGNvbnN1bHRhIHDDumJsaWNhIGUgb3BlcmHDp8O1ZXMgYWRtaW5pc3RyYXRpdmFzIGRlIHNhbGFzLiIgIkV4cHJlc3MgUm91dGVyIgogICAgICAgICAgICAgICAgICAgIHJlc2VydmFSb3V0ZXMgPSBjb21wb25lbnQgIlJvdGFzIGRlIHJlc2VydmFzIiAiRXhww7VlIGNvbnN1bHRhIGRlIGhvcsOhcmlvcywgY3JpYcOnw6NvLCBsaXN0YWdlbSBlIGNhbmNlbGFtZW50by4iICJFeHByZXNzIFJvdXRlciIKICAgICAgICAgICAgICAgICAgICBhdXRoTWlkZGxld2FyZSA9IGNvbXBvbmVudCAiQXV0ZW50aWNhw6fDo28gSldUIiAiVmFsaWRhIG8gYmVhcmVyIHRva2VuIGUgaW5qZXRhIG8gaWRlbnRpZmljYWRvciBlIG8gdGlwbyBkbyB1c3XDoXJpbyBuYSByZXF1aXNpw6fDo28uIiAic3JjL21pZGRsZXdhcmVzL2F1dGguanMiCiAgICAgICAgICAgICAgICAgICAgdXN1YXJpb0NvbnRyb2xsZXIgPSBjb21wb25lbnQgIkNvbnRyb2xsZXIgZGUgdXN1w6FyaW9zIiAiVHJhZHV6IHJlcXVpc2nDp8O1ZXMgZSByZXNwb3N0YXMgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHVzdcOhcmlvLiIgInNyYy9jb250cm9sbGVycy91c3VhcmlvQ29udHJvbGxlci5qcyIKICAgICAgICAgICAgICAgICAgICBzYWxhQ29udHJvbGxlciA9IGNvbXBvbmVudCAiQ29udHJvbGxlciBkZSBzYWxhcyIgIlRyYWR1eiByZXF1aXNpw6fDtWVzIGUgcmVzcG9zdGFzIEhUVFAgcGFyYSBvcGVyYcOnw7VlcyBkZSBzYWxhLiIgInNyYy9jb250cm9sbGVycy9zYWxhQ29udHJvbGxlci5qcyIKICAgICAgICAgICAgICAgICAgICByZXNlcnZhQ29udHJvbGxlciA9IGNvbXBvbmVudCAiQ29udHJvbGxlciBkZSByZXNlcnZhcyIgIlRyYWR1eiByZXF1aXNpw6fDtWVzIGUgcmVzcG9zdGFzIEhUVFAgcGFyYSBvcGVyYcOnw7VlcyBkZSByZXNlcnZhLiIgInNyYy9jb250cm9sbGVycy9yZXNlcnZhQ29udHJvbGxlci5qcyIKICAgICAgICAgICAgICAgICAgICBkb2NzQXBpID0gY29tcG9uZW50ICJEb2N1bWVudGHDp8OjbyBkYSBBUEkiICJQdWJsaWNhIG8gY29udHJhdG8gT3BlbkFQSSBlIGEgaW50ZXJmYWNlIFN3YWdnZXIgVUkuIiAic3dhZ2dlci55YW1sLCBzd2FnZ2VyLXVpLWV4cHJlc3MiCiAgICAgICAgICAgICAgICAgICAgYXJxdWl2b3NQdWJsaWNvcyA9IGNvbXBvbmVudCAiQXJxdWl2b3MgcMO6YmxpY29zIiAiRW50cmVnYSBpbWFnZW5zIGVzdMOhdGljYXMgZGFzIHNhbGFzIGUgZG9zIGVzcGHDp29zLiIgIkRpcmV0w7NyaW8gcHVibGljLyIKICAgICAgICAgICAgICAgIH0KCiAgICAgICAgICAgICAgICBncm91cCAiQXBsaWNhw6fDo28gZSByZWdyYXMgZGUgbmVnw7NjaW8iIHsKICAgICAgICAgICAgICAgICAgICB1c3VhcmlvU2VydmljZSA9IGNvbXBvbmVudCAiQ2Fzb3MgZGUgdXNvIGRlIHVzdcOhcmlvcyIgIlZhbGlkYSBjYWRhc3RybyBlIHBlcmZpbCwgdmVyaWZpY2EgY3JlZGVuY2lhaXMgZSBjb29yZGVuYSBhIGVtaXNzw6NvIGRlIEpXVC4iICJzcmMvc2VydmljZXMvdXN1YXJpb1NlcnZpY2UuanMiCiAgICAgICAgICAgICAgICAgICAgc2FsYVNlcnZpY2UgPSBjb21wb25lbnQgIkNhc29zIGRlIHVzbyBkZSBzYWxhcyIgIkFwbGljYSByZWdyYXMgZGUgY2FkYXN0cm8sIGNvbnN1bHRhLCBhdHVhbGl6YcOnw6NvIGUgZXhjbHVzw6NvIGRlIHNhbGFzLiIgInNyYy9zZXJ2aWNlcy9zYWxhU2VydmljZS5qcyIKICAgICAgICAgICAgICAgICAgICByZXNlcnZhU2VydmljZSA9IGNvbXBvbmVudCAiQ2Fzb3MgZGUgdXNvIGRlIHJlc2VydmFzIiAiQXBsaWNhIHJlZ3JhcyBkZSBkaXNwb25pYmlsaWRhZGUsIGNvbmZsaXRvIGRlIGhvcsOhcmlvLCBhdXRvcml6YcOnw6NvIGUgY2FuY2VsYW1lbnRvLiIgInNyYy9zZXJ2aWNlcy9yZXNlcnZhU2VydmljZS5qcyIKICAgICAgICAgICAgICAgIH0KCiAgICAgICAgICAgICAgICBncm91cCAiQWRhcHRhZG9yZXMgZGUgc2HDrWRhIGUgcGVyc2lzdMOqbmNpYSIgewogICAgICAgICAgICAgICAgICAgIHVzdWFyaW9SZXBvc2l0b3J5ID0gY29tcG9uZW50ICJSZXBvc2l0w7NyaW8gZGUgdXN1w6FyaW9zIiAiUGVyc2lzdGUgY29udGFzLCB2YWxpZGEgdW5pY2lkYWRlIGRlIGUtbWFpbCBlIGNyaWEgbyBhZG1pbmlzdHJhZG9yIGluaWNpYWwuIiAic3JjL3JlcG9zaXRvcmllcy91c3VhcmlvUmVwb3NpdG9yeS5qcyIKICAgICAgICAgICAgICAgICAgICBzYWxhUmVwb3NpdG9yeSA9IGNvbXBvbmVudCAiUmVwb3NpdMOzcmlvIGRlIHNhbGFzIiAiUGVyc2lzdGUgZSBjb25zdWx0YSBzYWxhcyBlIHZlcmlmaWNhIHJlc2VydmFzIGZ1dHVyYXMuIiAic3JjL3JlcG9zaXRvcmllcy9zYWxhUmVwb3NpdG9yeS5qcyIKICAgICAgICAgICAgICAgICAgICByZXNlcnZhUmVwb3NpdG9yeSA9IGNvbXBvbmVudCAiUmVwb3NpdMOzcmlvIGRlIHJlc2VydmFzIiAiUGVyc2lzdGUgcmVzZXJ2YXMgZSBjb25zdWx0YSByZXNlcnZhcyBwb3Igc2FsYSwgZGF0YSBlIHVzdcOhcmlvLiIgInNyYy9yZXBvc2l0b3JpZXMvcmVzZXJ2YVJlcG9zaXRvcnkuanMiCiAgICAgICAgICAgICAgICAgICAgZGF0YWJhc2VBZGFwdGVyID0gY29tcG9uZW50ICJDb25leMOjbyBTUUxpdGUiICJBYnJlIGRhdGFiYXNlLmRiIGUgZm9ybmVjZSBhIGNvbmV4w6NvIHVzYWRhIHBlbG9zIHJlcG9zaXTDs3Jpb3MuIiAic3JjL3JlcG9zaXRvcmllcy9kYXRhYmFzZS5qcywgYmV0dGVyLXNxbGl0ZTMiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGJhbmNvID0gY29udGFpbmVyICJEYXRhYmFzZSIgIkFybWF6ZW5hIHVzdcOhcmlvcywgc2FsYXMgZSByZXNlcnZhcyIgIlNRTGl0ZTMgKGRhdGFiYXNlLmRiKSIgewogICAgICAgICAgICAgICAgdGFncyAiRGF0YWJhc2UiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGFkbWluaXN0cmFkb3IgLT4gYXBwICJHZXJlbmNpYSBzYWxhcyBlIGFjb21wYW5oYSByZXNlcnZhcyB1c2FuZG8iICJIVFRQUyIKICAgICAgICAgICAgY2xpZW50ZSAtPiBhcHAgIkNvbnN1bHRhIHNhbGFzIGUgZmF6L2NhbmNlbGEgcmVzZXJ2YXMgdXNhbmRvIiAiSFRUUFMiCiAgICAgICAgICAgIGFwcCAtPiBhcGkgIkZheiBjaGFtYWRhcyBkZSBBUEkgcGFyYSIgIkpTT04gLyBIVFRQUyAvIEpXVCIKICAgICAgICAgICAgYXBwIC0+IG1pZGlhICJCYWl4YS9jYXJyZWdhIGltYWdlbnMgZGlyZXRhbWVudGUgZGUiICJIVFRQUyIKICAgICAgICAgICAgYXBpIC0+IG1pZGlhICJSZWFsaXphIHVwbG9hZCBlIG9idMOpbSBVUkxzIGRlIGltYWdlbnMgZW0iICJIVFRQUyAvIEFQSSIKICAgICAgICAgICAgYXBpIC0+IGVtYWlsICJEaXNwYXJhIGUtbWFpbHMgdHJhbnNhY2lvbmFpcyB2aWEiICJTTVRQIC8gQVBJIgogICAgICAgICAgICBhcGkgLT4gYmFuY28gIkzDqiBlIGdyYXZhIHVzdcOhcmlvcywgc2FsYXMgZSByZXNlcnZhcyBlbSIgIlNRTCAoYmV0dGVyLXNxbGl0ZTMpIgogICAgICAgICAgICBhcHAgLT4gdXN1YXJpb1JvdXRlcyAiQ2FkYXN0cm8sIGxvZ2luIGUgcGVyZmlsIiAiSlNPTi9IVFRQUyIKICAgICAgICAgICAgYXBwIC0+IHNhbGFSb3V0ZXMgIkNvbnN1bHRhIGUgYWRtaW5pc3RyYSBzYWxhcyIgIkpTT04vSFRUUFMiCiAgICAgICAgICAgIGFwcCAtPiByZXNlcnZhUm91dGVzICJDb25zdWx0YSBob3LDoXJpb3MsIGNyaWEgZSBjYW5jZWxhIHJlc2VydmFzIiAiSlNPTi9IVFRQUyIKCiAgICAgICAgICAgIGJvb3RzdHJhcCAtPiBodHRwQXBwICJJbmljaWEiCiAgICAgICAgICAgIGh0dHBBcHAgLT4gcm90YXMgIlJlZ2lzdHJhIGFzIHJvdGFzIgogICAgICAgICAgICBodHRwQXBwIC0+IGRvY3NBcGkgIkRpc3BvbmliaWxpemEgL2RvY3MgZSAvc3dhZ2dlci55YW1sIgogICAgICAgICAgICBodHRwQXBwIC0+IGFycXVpdm9zUHVibGljb3MgIlNlcnZlIC9wdWJsaWMiCiAgICAgICAgICAgIHJvdGFzIC0+IHVzdWFyaW9Sb3V0ZXMgIlJlZ2lzdHJhIgogICAgICAgICAgICByb3RhcyAtPiBzYWxhUm91dGVzICJSZWdpc3RyYSIKICAgICAgICAgICAgcm90YXMgLT4gcmVzZXJ2YVJvdXRlcyAiUmVnaXN0cmEiCiAgICAgICAgICAgIHVzdWFyaW9Sb3V0ZXMgLT4gdXN1YXJpb0NvbnRyb2xsZXIgIkVuY2FtaW5oYSBvcGVyYcOnw7VlcyBkZSB1c3XDoXJpbyIKICAgICAgICAgICAgc2FsYVJvdXRlcyAtPiBzYWxhQ29udHJvbGxlciAiRW5jYW1pbmhhIG9wZXJhw6fDtWVzIGRlIHNhbGEiCiAgICAgICAgICAgIHJlc2VydmFSb3V0ZXMgLT4gcmVzZXJ2YUNvbnRyb2xsZXIgIkVuY2FtaW5oYSBvcGVyYcOnw7VlcyBkZSByZXNlcnZhIgogICAgICAgICAgICBzYWxhUm91dGVzIC0+IGF1dGhNaWRkbGV3YXJlICJQcm90ZWdlIG9wZXJhw6fDtWVzIGFkbWluaXN0cmF0aXZhcyIKICAgICAgICAgICAgdXN1YXJpb1JvdXRlcyAtPiBhdXRoTWlkZGxld2FyZSAiUHJvdGVnZSBvcGVyYcOnw7VlcyBkbyBwZXJmaWwiCiAgICAgICAgICAgIHJlc2VydmFSb3V0ZXMgLT4gYXV0aE1pZGRsZXdhcmUgIlByb3RlZ2Ugb3BlcmHDp8O1ZXMgYXV0ZW50aWNhZGFzIgogICAgICAgICAgICB1c3VhcmlvQ29udHJvbGxlciAtPiB1c3VhcmlvU2VydmljZSAiRXhlY3V0YSBjYXNvcyBkZSB1c28iCiAgICAgICAgICAgIHNhbGFDb250cm9sbGVyIC0+IHNhbGFTZXJ2aWNlICJFeGVjdXRhIGNhc29zIGRlIHVzbyIKICAgICAgICAgICAgcmVzZXJ2YUNvbnRyb2xsZXIgLT4gcmVzZXJ2YVNlcnZpY2UgIkV4ZWN1dGEgY2Fzb3MgZGUgdXNvIgogICAgICAgICAgICB1c3VhcmlvU2VydmljZSAtPiB1c3VhcmlvUmVwb3NpdG9yeSAiQ29uc3VsdGEgZSBwZXJzaXN0ZSB1c3XDoXJpb3MiCiAgICAgICAgICAgIHNhbGFTZXJ2aWNlIC0+IHNhbGFSZXBvc2l0b3J5ICJDb25zdWx0YSBlIHBlcnNpc3RlIHNhbGFzIgogICAgICAgICAgICByZXNlcnZhU2VydmljZSAtPiBzYWxhUmVwb3NpdG9yeSAiQ29uc3VsdGEgc2FsYSBlIHZhbG9yIHBvciBob3JhIgogICAgICAgICAgICByZXNlcnZhU2VydmljZSAtPiByZXNlcnZhUmVwb3NpdG9yeSAiQ29uc3VsdGEgZSBwZXJzaXN0ZSByZXNlcnZhcyIKICAgICAgICAgICAgdXN1YXJpb1JlcG9zaXRvcnkgLT4gZGF0YWJhc2VBZGFwdGVyICJFeGVjdXRhIGNvbnN1bHRhcyBTUUwiCiAgICAgICAgICAgIHNhbGFSZXBvc2l0b3J5IC0+IGRhdGFiYXNlQWRhcHRlciAiRXhlY3V0YSBjb25zdWx0YXMgU1FMIgogICAgICAgICAgICByZXNlcnZhUmVwb3NpdG9yeSAtPiBkYXRhYmFzZUFkYXB0ZXIgIkV4ZWN1dGEgY29uc3VsdGFzIFNRTCIKICAgICAgICAgICAgZGF0YWJhc2VBZGFwdGVyIC0+IGJhbmNvICJMw6ogZSBncmF2YSIgIlNRTGl0ZSIKICAgICAgICB9CgogICAgICAgIGNvZGVTZXJ2ZXIgPSBlbGVtZW50ICJzcmMvYXBwL3NlcnZlci5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIlBvbnRvIGRlIGVudHJhZGE7IGluaWNpYSBvIHNlcnZpZG9yIG5hIHBvcnRhIDMwMDAuIiAiQ29kZSIKICAgICAgICBjb2RlQXBwID0gZWxlbWVudCAic3JjL2FwcC9BcHAuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJDb25maWd1cmEgbyBFeHByZXNzLCBTd2FnZ2VyIFVJLCBhcnF1aXZvcyBlc3TDoXRpY29zLCByb3RhcyBlIGVycm9zLiIgIkNvZGUiCiAgICAgICAgY29kZVJvdXRlcyA9IGVsZW1lbnQgInNyYy9yb3V0ZXMvaW5kZXguanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZ3JlZ2Egb3MgbcOzZHVsb3MgZGUgcm90YXMuIiAiQ29kZSIKICAgICAgICBjb2RlVXN1YXJpb1JvdXRlcyA9IGVsZW1lbnQgInNyYy9yb3V0ZXMvdXN1YXJpb1JvdXRlcy5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIlJvdGFzIGRlIGNhZGFzdHJvLCBsb2dpbiBlIHBlcmZpbC4iICJDb2RlIgogICAgICAgIGNvZGVTYWxhUm91dGVzID0gZWxlbWVudCAic3JjL3JvdXRlcy9zYWxhUm91dGVzLmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiUm90YXMgZGUgY29uc3VsdGEgZSBhZG1pbmlzdHJhw6fDo28gZGUgc2FsYXMuIiAiQ29kZSIKICAgICAgICBjb2RlUmVzZXJ2YVJvdXRlcyA9IGVsZW1lbnQgInNyYy9yb3V0ZXMvcmVzZXJ2YVJvdXRlcy5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIlJvdGFzIGRlIGhvcsOhcmlvcyBlIHJlc2VydmFzLiIgIkNvZGUiCiAgICAgICAgY29kZUF1dGggPSBlbGVtZW50ICJzcmMvbWlkZGxld2FyZXMvYXV0aC5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIk1pZGRsZXdhcmUgZGUgYXV0ZW50aWNhw6fDo28gYmVhcmVyIEpXVC4iICJDb2RlIgogICAgICAgIGNvZGVVc3VhcmlvQ29udHJvbGxlciA9IGVsZW1lbnQgInNyYy9jb250cm9sbGVycy91c3VhcmlvQ29udHJvbGxlci5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIkFkYXB0YWRvciBIVFRQIHBhcmEgb3BlcmHDp8O1ZXMgZGUgdXN1w6FyaW8uIiAiQ29kZSIKICAgICAgICBjb2RlU2FsYUNvbnRyb2xsZXIgPSBlbGVtZW50ICJzcmMvY29udHJvbGxlcnMvc2FsYUNvbnRyb2xsZXIuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZGFwdGFkb3IgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHNhbGEuIiAiQ29kZSIKICAgICAgICBjb2RlUmVzZXJ2YUNvbnRyb2xsZXIgPSBlbGVtZW50ICJzcmMvY29udHJvbGxlcnMvcmVzZXJ2YUNvbnRyb2xsZXIuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJBZGFwdGFkb3IgSFRUUCBwYXJhIG9wZXJhw6fDtWVzIGRlIHJlc2VydmEuIiAiQ29kZSIKICAgICAgICBjb2RlVXN1YXJpb1NlcnZpY2UgPSBlbGVtZW50ICJzcmMvc2VydmljZXMvdXN1YXJpb1NlcnZpY2UuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJSZWdyYXMgZSBjYXNvcyBkZSB1c28gZGUgdXN1w6FyaW8uIiAiQ29kZSIKICAgICAgICBjb2RlU2FsYVNlcnZpY2UgPSBlbGVtZW50ICJzcmMvc2VydmljZXMvc2FsYVNlcnZpY2UuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJSZWdyYXMgZSBjYXNvcyBkZSB1c28gZGUgc2FsYS4iICJDb2RlIgogICAgICAgIGNvZGVSZXNlcnZhU2VydmljZSA9IGVsZW1lbnQgInNyYy9zZXJ2aWNlcy9yZXNlcnZhU2VydmljZS5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIlJlZ3JhcyBlIGNhc29zIGRlIHVzbyBkZSByZXNlcnZhLiIgIkNvZGUiCiAgICAgICAgY29kZVVzdWFyaW9SZXBvc2l0b3J5ID0gZWxlbWVudCAic3JjL3JlcG9zaXRvcmllcy91c3VhcmlvUmVwb3NpdG9yeS5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIkFkYXB0YWRvciBkZSBwZXJzaXN0w6puY2lhIGRlIHVzdcOhcmlvLiIgIkNvZGUiCiAgICAgICAgY29kZVNhbGFSZXBvc2l0b3J5ID0gZWxlbWVudCAic3JjL3JlcG9zaXRvcmllcy9zYWxhUmVwb3NpdG9yeS5qcyIgIk3Ds2R1bG8gSmF2YVNjcmlwdCIgIkFkYXB0YWRvciBkZSBwZXJzaXN0w6puY2lhIGRlIHNhbGEuIiAiQ29kZSIKICAgICAgICBjb2RlUmVzZXJ2YVJlcG9zaXRvcnkgPSBlbGVtZW50ICJzcmMvcmVwb3NpdG9yaWVzL3Jlc2VydmFSZXBvc2l0b3J5LmpzIiAiTcOzZHVsbyBKYXZhU2NyaXB0IiAiQWRhcHRhZG9yIGRlIHBlcnNpc3TDqm5jaWEgZGUgcmVzZXJ2YS4iICJDb2RlIgogICAgICAgIGNvZGVEYXRhYmFzZSA9IGVsZW1lbnQgInNyYy9yZXBvc2l0b3JpZXMvZGF0YWJhc2UuanMiICJNw7NkdWxvIEphdmFTY3JpcHQiICJDb25leMOjbyBiZXR0ZXItc3FsaXRlMyBjb20gZGF0YWJhc2UuZGIuIiAiQ29kZSIKCiAgICAgICAgY29kZVNlcnZlciAtPiBjb2RlQXBwICJJbXBvcnRhIGEgYXBsaWNhw6fDo28iCiAgICAgICAgY29kZUFwcCAtPiBjb2RlUm91dGVzICJSZWdpc3RyYSBhcyByb3RhcyIKICAgICAgICBjb2RlUm91dGVzIC0+IGNvZGVVc3VhcmlvUm91dGVzICJBZ3JlZ2EiCiAgICAgICAgY29kZVJvdXRlcyAtPiBjb2RlU2FsYVJvdXRlcyAiQWdyZWdhIgogICAgICAgIGNvZGVSb3V0ZXMgLT4gY29kZVJlc2VydmFSb3V0ZXMgIkFncmVnYSIKICAgICAgICBjb2RlVXN1YXJpb1JvdXRlcyAtPiBjb2RlVXN1YXJpb0NvbnRyb2xsZXIgIkVuY2FtaW5oYSByZXF1aXNpw6fDtWVzIgogICAgICAgIGNvZGVTYWxhUm91dGVzIC0+IGNvZGVTYWxhQ29udHJvbGxlciAiRW5jYW1pbmhhIHJlcXVpc2nDp8O1ZXMiCiAgICAgICAgY29kZVJlc2VydmFSb3V0ZXMgLT4gY29kZVJlc2VydmFDb250cm9sbGVyICJFbmNhbWluaGEgcmVxdWlzacOnw7VlcyIKICAgICAgICBjb2RlVXN1YXJpb1JvdXRlcyAtPiBjb2RlQXV0aCAiUHJvdGVnZSBvcGVyYcOnw7VlcyBkZSBwZXJmaWwiCiAgICAgICAgY29kZVNhbGFSb3V0ZXMgLT4gY29kZUF1dGggIlByb3RlZ2Ugb3BlcmHDp8O1ZXMgYWRtaW5pc3RyYXRpdmFzIgogICAgICAgIGNvZGVSZXNlcnZhUm91dGVzIC0+IGNvZGVBdXRoICJQcm90ZWdlIG9wZXJhw6fDtWVzIGF1dGVudGljYWRhcyIKICAgICAgICBjb2RlVXN1YXJpb0NvbnRyb2xsZXIgLT4gY29kZVVzdWFyaW9TZXJ2aWNlICJJbnZvY2EiCiAgICAgICAgY29kZVNhbGFDb250cm9sbGVyIC0+IGNvZGVTYWxhU2VydmljZSAiSW52b2NhIgogICAgICAgIGNvZGVSZXNlcnZhQ29udHJvbGxlciAtPiBjb2RlUmVzZXJ2YVNlcnZpY2UgIkludm9jYSIKICAgICAgICBjb2RlVXN1YXJpb1NlcnZpY2UgLT4gY29kZVVzdWFyaW9SZXBvc2l0b3J5ICJVc2EiCiAgICAgICAgY29kZVNhbGFTZXJ2aWNlIC0+IGNvZGVTYWxhUmVwb3NpdG9yeSAiVXNhIgogICAgICAgIGNvZGVSZXNlcnZhU2VydmljZSAtPiBjb2RlU2FsYVJlcG9zaXRvcnkgIkNvbnN1bHRhIHNhbGEiCiAgICAgICAgY29kZVJlc2VydmFTZXJ2aWNlIC0+IGNvZGVSZXNlcnZhUmVwb3NpdG9yeSAiQ29uc3VsdGEgZSBwZXJzaXN0ZSIKICAgICAgICBjb2RlVXN1YXJpb1JlcG9zaXRvcnkgLT4gY29kZURhdGFiYXNlICJVc2EgYSBjb25leMOjbyIKICAgICAgICBjb2RlU2FsYVJlcG9zaXRvcnkgLT4gY29kZURhdGFiYXNlICJVc2EgYSBjb25leMOjbyIKICAgICAgICBjb2RlUmVzZXJ2YVJlcG9zaXRvcnkgLT4gY29kZURhdGFiYXNlICJVc2EgYSBjb25leMOjbyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBjb3dvcmtpbmcgIkMxLWNvbnRleHRvIiB7CiAgICAgICAgICAgIHRpdGxlICJDMSDigJQgQ29udGV4dG8gZG8gc2lzdGVtYSIKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBjb3dvcmtpbmcgIkMyLWNvbnRhaW5lcnMiIHsKICAgICAgICAgICAgdGl0bGUgIkMyIOKAlCBDb250YWluZXJzIgogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dCB0YgogICAgICAgIH0KCiAgICAgICAgY29tcG9uZW50IGFwaSAiQzMtY29tcG9uZW50ZXMiIHsKICAgICAgICAgICAgdGl0bGUgIkMzIOKAlCBDb21wb25lbnRlcyBkYSBBUEkgKENsZWFuIEFyY2hpdGVjdHVyZSkiCiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0IGxyIDI1MCAxODAKICAgICAgICB9CgogICAgICAgIGN1c3RvbSAiQzQtY29kaWdvIiB7CiAgICAgICAgICAgIHRpdGxlICJDNCDigJQgQ8OzZGlnbzogbcOzZHVsb3MgZSBkZXBlbmTDqm5jaWFzIgogICAgICAgICAgICBkZXNjcmlwdGlvbiAiTWFwYSBkb3MgYXJxdWl2b3MgSmF2YVNjcmlwdCBleGlzdGVudGVzLiBObyByZXBvc2l0w7NyaW8sIHJlZ3JhcyBkZSBuZWfDs2NpbyBlc3TDo28gbm9zIHNlcnZpY2VzOyBuw6NvIGjDoSBtw7NkdWxvcyBzZXBhcmFkb3MgZGUgZW50aWRhZGVzIG5lbSBpbnRlcmZhY2VzIGV4cGzDrWNpdGFzIGRlIHBvcnRhcy4iCiAgICAgICAgICAgIGluY2x1ZGUgY29kZVNlcnZlciBjb2RlQXBwIGNvZGVSb3V0ZXMgY29kZVVzdWFyaW9Sb3V0ZXMgY29kZVNhbGFSb3V0ZXMgY29kZVJlc2VydmFSb3V0ZXMgY29kZUF1dGggY29kZVVzdWFyaW9Db250cm9sbGVyIGNvZGVTYWxhQ29udHJvbGxlciBjb2RlUmVzZXJ2YUNvbnRyb2xsZXIgY29kZVVzdWFyaW9TZXJ2aWNlIGNvZGVTYWxhU2VydmljZSBjb2RlUmVzZXJ2YVNlcnZpY2UgY29kZVVzdWFyaW9SZXBvc2l0b3J5IGNvZGVTYWxhUmVwb3NpdG9yeSBjb2RlUmVzZXJ2YVJlcG9zaXRvcnkgY29kZURhdGFiYXNlCiAgICAgICAgICAgIGF1dG9MYXlvdXQgbHIgMjUwIDE4MAogICAgICAgIH0KCiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCAiQ2xpZW50ZSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzA4NDI3YiIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICAgICAgc2hhcGUgUGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQWRtaW5pc3RyYWRvciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzA4NDI3YiIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICAgICAgc2hhcGUgUGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjMGY3NjZlIgogICAgICAgICAgICAgICAgY29sb3IgIiNmZmZmZmYiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29udGFpbmVyIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjNDM4ZGQ1IgogICAgICAgICAgICAgICAgY29sb3IgIiNmZmZmZmYiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29tcG9uZW50IiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjMjU2M2ViIgogICAgICAgICAgICAgICAgY29sb3IgIiNmZmZmZmYiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiM0MzhkZDUiCiAgICAgICAgICAgICAgICBjb2xvciAiI2ZmZmZmZiIKICAgICAgICAgICAgICAgIHNoYXBlIEN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRXh0ZXJubyIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiIzk5OTk5OSIKICAgICAgICAgICAgICAgIGNvbG9yICIjZmZmZmZmIgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvZGUiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiMzMzQxNTUiCiAgICAgICAgICAgICAgICBjb2xvciAiI2ZmZmZmZiIKICAgICAgICAgICAgICAgIHNoYXBlIENvbXBvbmVudAogICAgICAgICAgICB9CiAgICAgICAgICAgIHJlbGF0aW9uc2hpcCAiUmVsYXRpb25zaGlwIiB7CiAgICAgICAgICAgICAgICBjb2xvciAiIzQ3NTU2OSIKICAgICAgICAgICAgICAgIHRoaWNrbmVzcyAyCiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICB9Cn0=",
     "structurizr.inspection.info" : "0",
     "structurizr.inspection.ignore" : "0",
     "structurizr.inspection.warning" : "0"
@@ -846,25 +868,9 @@
         "rankSeparation" : 250,
         "vertices" : true
       },
-      "containerId" : "4",
+      "containerId" : "7",
       "elements" : [ {
-        "id" : "1",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "2",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "5",
-        "x" : 0,
-        "y" : 0
-      }, {
         "id" : "6",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "7",
         "x" : 0,
         "y" : 0
       }, {
@@ -935,30 +941,24 @@
         "id" : "24",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "25",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "26",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "27",
+        "x" : 0,
+        "y" : 0
       } ],
       "externalContainerBoundariesVisible" : false,
       "key" : "C3-componentes",
-      "name" : "Component View: Plataforma de Reservas Monte Horebe - API de Reservas",
+      "name" : "Component View: MH Coworking - API (Backend)",
       "order" : 3,
       "relationships" : [ {
-        "id" : "29"
-      }, {
-        "id" : "30"
-      }, {
-        "id" : "31"
-      }, {
-        "id" : "32"
-      }, {
-        "id" : "33"
-      }, {
-        "id" : "35"
-      }, {
-        "id" : "36"
-      }, {
-        "id" : "37"
-      }, {
-        "id" : "38"
-      }, {
         "id" : "39"
       }, {
         "id" : "40"
@@ -985,6 +985,10 @@
       }, {
         "id" : "51"
       }, {
+        "id" : "52"
+      }, {
+        "id" : "53"
+      }, {
         "id" : "54"
       }, {
         "id" : "55"
@@ -1004,18 +1008,22 @@
         "id" : "62"
       }, {
         "id" : "63"
+      }, {
+        "id" : "64"
+      }, {
+        "id" : "65"
       } ],
       "title" : "C3 — Componentes da API (Clean Architecture)"
     } ],
     "configuration" : {
       "styles" : {
         "elements" : [ {
-          "background" : "#7c3aed",
+          "background" : "#08427b",
           "color" : "#ffffff",
           "shape" : "Person",
           "tag" : "Administrador"
         }, {
-          "background" : "#1d4ed8",
+          "background" : "#08427b",
           "color" : "#ffffff",
           "shape" : "Person",
           "tag" : "Cliente"
@@ -1029,14 +1037,18 @@
           "color" : "#ffffff",
           "tag" : "Component"
         }, {
-          "background" : "#0e7490",
+          "background" : "#438dd5",
           "color" : "#ffffff",
           "tag" : "Container"
         }, {
-          "background" : "#475569",
+          "background" : "#438dd5",
           "color" : "#ffffff",
           "shape" : "Cylinder",
           "tag" : "Database"
+        }, {
+          "background" : "#999999",
+          "color" : "#ffffff",
+          "tag" : "Externo"
         }, {
           "background" : "#0f766e",
           "color" : "#ffffff",
@@ -1054,7 +1066,7 @@
       "automaticLayout" : {
         "edgeSeparation" : 50,
         "nodeSeparation" : 50,
-        "rankDirection" : "LeftRight",
+        "rankDirection" : "TopBottom",
         "rankSeparation" : 100,
         "vertices" : true
       },
@@ -1067,28 +1079,46 @@
         "x" : 0,
         "y" : 0
       }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
         "id" : "4",
         "x" : 0,
         "y" : 0
       }, {
-        "id" : "24",
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "27",
         "x" : 0,
         "y" : 0
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "C2-containers",
-      "name" : "Container View: Plataforma de Reservas Monte Horebe",
+      "name" : "Container View: MH Coworking",
       "order" : 2,
       "relationships" : [ {
-        "id" : "25"
+        "id" : "28"
       }, {
-        "id" : "27"
+        "id" : "30"
       }, {
-        "id" : "34"
+        "id" : "32"
       }, {
-        "id" : "52"
+        "id" : "33"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "38"
       } ],
-      "softwareSystemId" : "3",
+      "softwareSystemId" : "5",
       "title" : "C2 — Containers"
     } ],
     "customViews" : [ {
@@ -1101,14 +1131,6 @@
       },
       "description" : "Mapa dos arquivos JavaScript existentes. No repositório, regras de negócio estão nos services; não há módulos separados de entidades nem interfaces explícitas de portas.",
       "elements" : [ {
-        "id" : "64",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "65",
-        "x" : 0,
-        "y" : 0
-      }, {
         "id" : "66",
         "x" : 0,
         "y" : 0
@@ -1168,6 +1190,14 @@
         "id" : "80",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "81",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "82",
+        "x" : 0,
+        "y" : 0
       } ],
       "key" : "C4-codigo",
       "name" : "Custom View: C4 — Código: módulos e dependências",
@@ -1177,9 +1207,9 @@
       }, {
         "id" : "101"
       }, {
-        "id" : "81"
+        "id" : "102"
       }, {
-        "id" : "82"
+        "id" : "103"
       }, {
         "id" : "83"
       }, {
@@ -1237,19 +1267,29 @@
         "id" : "3",
         "x" : 0,
         "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "C1-contexto",
-      "name" : "System Context View: Plataforma de Reservas Monte Horebe",
+      "name" : "System Context View: MH Coworking",
       "order" : 1,
       "relationships" : [ {
-        "id" : "26"
+        "id" : "29"
       }, {
-        "id" : "28"
+        "id" : "31"
       }, {
-        "id" : "53"
+        "id" : "34"
+      }, {
+        "id" : "37"
       } ],
-      "softwareSystemId" : "3",
+      "softwareSystemId" : "5",
       "title" : "C1 — Contexto do sistema"
     } ]
   }
