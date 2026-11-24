@@ -3,7 +3,8 @@
 ## Equipe
 - Anna Beatryz Arruda Ferreira - 566366
 - Davi Sousa Facundo - 565910
-- Júlio Mateus Morais - 563850 
+- Enzo Hariel Ferreira Gaspar - 566785 (Mobile)
+- Júlio Mateus Morais - 563850 (Arquitetura)
 - Marcos Emanuel Alves Dias - 568099
 - Rodrigo Rodrigues de Sousa - 570418
 - Victor Emanuel Silva de Queiroz - 567683
