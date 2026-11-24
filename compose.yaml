@@ -1,0 +1,11 @@
+services:
+  structurizr:
+    image: structurizr/structurizr:latest
+    container_name: mh-coworking-structurizr
+    command: ["local"]
+    user: "${STRUCTURIZR_UID:-1000}:${STRUCTURIZR_GID:-1000}"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./structurizr:/usr/local/structurizr:z
+    restart: unless-stopped
