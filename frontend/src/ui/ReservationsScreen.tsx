@@ -12,7 +12,7 @@ import { ReservationCard } from './components/ReservationCard';
 import { BottomNavigation, type AppTab } from './components/BottomNavigation';
 import { colors } from './theme';
 
-export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api: ApiClient; session: Session; onLogout: () => void; onNavigate: (tab: AppTab) => void }) {
+export function ReservationsScreen({ api, session, onLogout, onNavigate, client = false }: { api: ApiClient; session: Session; onLogout: () => void; onNavigate: (tab: AppTab) => void, client?: boolean}) {
   const [tab, setTab] = useState<ReservationTab>('upcoming');
   const [filters, setFilters] = useState<FilterValues>({});
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -38,13 +38,14 @@ export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api
   }, [reload]);
 
   useEffect(() => {
+    if (client) return;
     const controller = new AbortController();
     setRoomError('');
     api.rooms(controller.signal).then(value => { if (!controller.signal.aborted) setRooms(value); }).catch(() => {
       if (!controller.signal.aborted) setRoomError('Não foi possível carregar as salas para o filtro.');
     });
     return () => controller.abort();
-  }, [api, revision]);
+  }, [api, revision, client]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -85,8 +86,17 @@ export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api
 
   const visible = selectReservations(items, tab, now, filters);
   const listError = error || roomError;
+  const hasFilters = filters.roomId !== undefined || !!filters.date;
+  const emptyTitle = tab === 'upcoming'
+    ? (client ? 'Nenhuma reserva futura' : 'Nenhuma reserva próxima')
+    : 'Nenhuma reserva no histórico';
+  const emptyText = hasFilters
+    ? 'Não há reservas para os filtros selecionados.'
+    : client
+      ? (tab === 'upcoming' ? 'Reserve uma sala para vê-la aqui!' : 'Suas reservas concluídas aparecerão aqui.')
+      : 'As reservas aparecerão aqui quando estiverem disponíveis.';
   return <View style={styles.page}>
-    <View style={styles.header}><Text accessibilityRole="header" style={styles.title}>Reservas</Text>
+    <View style={styles.header}><Text accessibilityRole="header" style={styles.title}>{client ? 'Minhas reservas' : 'Reservas'}</Text>
       <Pressable accessibilityRole="button" accessibilityLabel="Sair da conta" onPress={onLogout} style={styles.logout}><Text style={styles.logoutText}>Sair</Text></Pressable>
     </View>
     <View style={styles.tabs}>
@@ -94,7 +104,7 @@ export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api
         key={item.key} accessibilityRole="tab" accessibilityState={{ selected: tab === item.key }} onPress={() => { setTab(item.key); setNotice(''); }}
         style={[styles.tab, tab === item.key && styles.activeTab]}><Text style={[styles.tabText, tab === item.key && styles.activeTabText]}>{item.title}</Text></Pressable>)}
     </View>
-    <Filters value={filters} rooms={rooms} onChange={value => { setFilters(value); setNotice(''); }} />
+    {client ? null : <Filters value={filters} rooms={rooms} onChange={value => { setFilters(value); setNotice(''); }} />}
     {notice ? <Pressable accessibilityRole="button" accessibilityLabel={`${notice} Fechar aviso`} onPress={() => setNotice('')} style={styles.notice}><Text accessibilityLiveRegion="polite" style={styles.noticeText}>{notice}</Text><Feather name="x" size={16} color={colors.navy} /></Pressable> : null}
     <View style={styles.list}>
     <FlatList data={loading || error ? [] : visible} keyExtractor={item => String(item.id)} style={{ flex: 1 }} contentContainerStyle={styles.listContent}
@@ -102,7 +112,7 @@ export function ReservationsScreen({ api, session, onLogout, onNavigate }: { api
       ItemSeparatorComponent={Separator} refreshing={loading} onRefresh={reload}
       ListHeaderComponent={listError ? <View style={styles.state}><Text accessibilityRole="alert" style={styles.error}>{listError}</Text><Button title="Tentar novamente" secondary onPress={reload} /></View> : undefined}
       ListEmptyComponent={loading ? <View style={styles.state}><ActivityIndicator accessibilityLabel="Carregando reservas" color={colors.navy} /><Text style={styles.emptyText}>Carregando reservas…</Text></View> : !error ?
-        <View style={styles.state}><Feather name="calendar" size={30} color={colors.icon} /><Text style={styles.emptyTitle}>{tab === 'upcoming' ? 'Nenhuma reserva próxima' : 'Nenhuma reserva no histórico'}</Text><Text style={styles.emptyText}>{filters.roomId !== undefined || filters.date ? 'Não há reservas para os filtros selecionados.' : 'As reservas aparecerão aqui quando estiverem disponíveis.'}</Text></View> : undefined}
+      <View style={styles.state}><Feather name="calendar" size={30} color={colors.icon} /><Text style={styles.emptyTitle}>{emptyTitle}</Text><Text style={styles.emptyText}>{emptyText}</Text></View> : undefined}
     />
     </View>
     <BottomNavigation active="reservations" onSelect={onNavigate} />
