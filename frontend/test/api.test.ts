@@ -63,11 +63,11 @@ test('consulta horários e cria reserva com as rotas e payloads do backend', asy
   const api = new ApiClient('http://api.test', undefined, async (input, init) => {
     calls.push({ url: String(input), init });
     return Response.json(calls.length === 1
-      ? [{ hora: 8, reservado: false }]
+      ? [{ hora: 8, reservado: false, expirado: false }]
       : { id: 12, usuario_id: 3, sala_id: 7, data: '2030-01-02', hora: 8, valor: 40 });
   });
   const hours = await api.availableHours(7, '2030-01-02');
-  assert.deepEqual(hours, [{ hora: 8, reservado: false }]);
+  assert.deepEqual(hours, [{ hora: 8, reservado: false, expirado: false }]);
   assert.equal(calls[0].url, 'http://api.test/salas/7/horarios?data=2030-01-02');
   const reservation = await api.createReservation('token', {
     sala_id: 7, data: '2030-01-02', hora: 8,

@@ -4,7 +4,7 @@ import type { Reservation } from '../../domain/models';
 import { formatDate, formatPrice } from '../../domain/reservations';
 import { colors } from '../theme';
 
-export function ReservationCard({ reservation, completed, onCancel }: { reservation: Reservation; completed: boolean; onCancel: (value: Reservation) => void }) {
+export function ReservationCard({ reservation, completed, showRequester, onCancel }: { reservation: Reservation; completed: boolean; showRequester: boolean; onCancel: (value: Reservation) => void }) {
   return <View style={styles.card}>
     <View style={styles.heading}>
       <Text style={styles.name}>{reservation.sala_nome}</Text>
@@ -14,6 +14,10 @@ export function ReservationCard({ reservation, completed, onCancel }: { reservat
       <View style={styles.detail}><Feather name="calendar" size={14} color={colors.icon} /><Text style={styles.meta}>{formatDate(reservation.data)}</Text></View>
       <View style={styles.detail}><Feather name="clock" size={14} color={colors.icon} /><Text style={styles.meta}>{reservation.hora}h</Text></View>
     </View>
+    {showRequester ? <View style={styles.requester}>
+      <Text style={styles.meta}>Solicitante: {reservation.usuario_nome}</Text>
+      {reservation.usuario_email ? <Text style={styles.meta}>{reservation.usuario_email}</Text> : null}
+    </View> : null}
     <View style={styles.footer}>
       <Text style={styles.price}>{formatPrice(reservation.valor)}</Text>
       {!completed ? <Pressable accessibilityRole="button" accessibilityLabel={`Cancelar reserva de ${reservation.sala_nome} em ${formatDate(reservation.data)} às ${reservation.hora}h`}
@@ -30,6 +34,7 @@ const styles = StyleSheet.create({
   badge: { backgroundColor: colors.badge, borderRadius: 4, paddingHorizontal: 11, paddingVertical: 3 },
   badgeText: { color: colors.navy, fontSize: 9, fontWeight: '700' },
   details: { flexDirection: 'row', gap: 14, marginTop: 8 }, detail: { flexDirection: 'row', gap: 3, alignItems: 'center' },
+  requester: { marginTop: 10, gap: 3 },
   meta: { color: colors.gray, fontSize: 14 }, footer: { marginTop: 18, minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   price: { color: colors.orange, fontSize: 16, fontWeight: '700', marginLeft: 3 },
   cancel: { minHeight: 44, paddingHorizontal: 8, justifyContent: 'center' }, cancelText: { color: colors.navy, fontSize: 12, fontWeight: '600', textDecorationLine: 'underline' },

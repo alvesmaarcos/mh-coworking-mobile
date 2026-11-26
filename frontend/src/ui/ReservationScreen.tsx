@@ -116,15 +116,16 @@ export function ReservationScreen({
 
     setSubmitting(false);
     if (failures.length) {
-      const conflict = failures.some(
+      const onlyConflicts = failures.every(
         ({ cause }) => cause instanceof ApiError && cause.status === 409,
       );
-      const firstError = failures.find(({ cause }) => cause instanceof Error)
-        ?.cause;
+      const firstError = failures.find(({ cause }) =>
+        cause instanceof Error && !(cause instanceof ApiError && cause.status === 409),
+      )?.cause;
       const failedHours = failures.map(({ hour }) => `${hour}h`).join(", ");
       setSelectedHours([]);
       setNotice(
-        conflict
+        onlyConflicts
           ? `${created ? `${created} horário(s) reservado(s). ` : ""}Um ou mais horários já foram ocupados. Atualizamos a disponibilidade; escolha novamente.`
           : `${created ? `${created} horário(s) reservado(s). ` : ""}Não foi possível reservar ${failedHours}.${firstError instanceof Error ? ` ${firstError.message}` : ""}`,
       );
@@ -219,7 +220,8 @@ export function ReservationScreen({
           </View>
         ) : (
           <View style={styles.hoursGrid}>
-            {hours.map(({ hora, reservado }) => {
+            {hours.map(({ hora, reservado, expirado }) => {
+              const unavailable = reservado || expirado;
               const selected = selectedHours.includes(hora);
               const label = `${hora}h - ${hora + 1}h`;
               return (
@@ -229,20 +231,20 @@ export function ReservationScreen({
                   accessibilityLabel={label}
                   accessibilityState={{
                     selected,
-                    disabled: reservado || submitting,
+                    disabled: unavailable || submitting,
                   }}
-                  disabled={reservado || submitting}
+                  disabled={unavailable || submitting}
                   onPress={() => toggleHour(hora)}
                   style={[
                     styles.hourCard,
-                    reservado && styles.unavailableHour,
+                    unavailable && styles.unavailableHour,
                     selected && styles.selectedHour,
                   ]}
                 >
                   <Text
                     style={[
                       styles.hourText,
-                      reservado && styles.unavailableText,
+                      unavailable && styles.unavailableText,
                       selected && styles.selectedText,
                     ]}
                   >

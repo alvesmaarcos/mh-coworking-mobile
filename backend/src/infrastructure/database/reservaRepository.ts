@@ -41,7 +41,7 @@ export function createReservaRepository(db: Database): ReservaRepository {
       r.hora,
       r.valor,
       s.nome AS sala_nome,
-      u.nome AS usuario_nome
+      u.nome AS usuario_nome${tipo === "ADM" ? ", u.email AS usuario_email" : ""}
     FROM reservas r
     JOIN salas s ON s.id = r.sala_id
     JOIN usuarios u ON u.id = r.usuario_id

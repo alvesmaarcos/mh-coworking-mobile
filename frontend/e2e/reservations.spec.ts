@@ -49,7 +49,9 @@ test('cliente navega por salas, detalhes e confirma reserva', async ({ page }) =
   await expect(page.getByRole('heading', { name: 'Detalhes da sala' })).toBeVisible();
   await page.getByRole('button', { name: 'Reservar horário', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Confirmar reserva', exact: true })).toBeDisabled();
-  await page.getByRole('button', { name: '8h - 9h', exact: true }).click();
+  await expect(page.getByRole('button', { name: '8h - 9h', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: '12h - 13h', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: '13h - 14h', exact: true }).click();
   await page.getByRole('button', { name: 'Confirmar reserva', exact: true }).click();
   await expect(page.getByText('Reserva confirmada com sucesso.', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Espaços disponíveis' })).toBeVisible();
@@ -60,9 +62,13 @@ test('abas seguem as referências e sessão é restaurada após recarregar', asy
   page.on('pageerror', error => errors.push(error.message));
   await login(page);
   await expect(cancelButtons(page)).toHaveCount(3);
+  await expect(page.getByText('Solicitante: Cliente teste', { exact: true })).toHaveCount(3);
+  await expect(page.getByText('cliente@example.com', { exact: true })).toHaveCount(3);
   await page.screenshot({ path: testInfo.outputPath('reservas-proximas.png'), fullPage: true });
   await page.getByRole('tab', { name: 'Histórico', exact: true }).click();
   await expect(page.getByText('Concluída', { exact: true })).toHaveCount(2);
+  await expect(page.getByText('Solicitante: Cliente teste', { exact: true })).toHaveCount(2);
+  await expect(page.getByText('cliente@example.com', { exact: true })).toHaveCount(2);
   await expect(page.getByText('R$ 50', { exact: true })).toBeVisible();
   await expect(cancelButtons(page)).toHaveCount(0);
   await page.screenshot({ path: testInfo.outputPath('reservas-historico.png'), fullPage: true });

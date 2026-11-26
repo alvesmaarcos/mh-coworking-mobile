@@ -290,7 +290,8 @@ paths:
       summary: Consultar horários da sala
       description: >-
         Retorna os horários do coworking (8 a 17) para a sala e data informadas,
-        indicando quais já estão reservados. Não exige login.
+        indicando quais já estão reservados e quais já iniciaram no horário local
+        do servidor. Não exige login.
       security: []
       parameters:
         - name: id
@@ -311,9 +312,23 @@ paths:
           description: Horários da sala na data
           content:
             application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [hora, reservado, expirado]
+                  properties:
+                    hora:
+                      type: integer
+                      minimum: 8
+                      maximum: 17
+                    reservado:
+                      type: boolean
+                    expirado:
+                      type: boolean
               example:
-                - { "hora": 8, "reservado": false }
-                - { "hora": 9, "reservado": true }
+                - { "hora": 8, "reservado": false, "expirado": false }
+                - { "hora": 9, "reservado": true, "expirado": false }
         '400':
           description: Data inválida. Use o formato AAAA-MM-DD
         '404':
@@ -411,7 +426,7 @@ paths:
         Retorna as reservas em ordem crescente de data e hora.
         CLIENTE recebe somente as próprias reservas, futuras e passadas;
         os filtros são ignorados para clientes. ADM recebe todas as reservas
-        e pode filtrar por sala, por data ou por ambos.
+        com o e-mail do solicitante e pode filtrar por sala, por data ou por ambos.
       security:
         - bearerAuth: []
       parameters:
@@ -461,6 +476,10 @@ paths:
                       type: string
                     usuario_nome:
                       type: string
+                    usuario_email:
+                      type: string
+                      format: email
+                      description: E-mail atual do solicitante. Campo exclusivo para ADM.
               example:
                 - id: 7
                   usuario_id: 3
@@ -470,6 +489,7 @@ paths:
                   valor: 80
                   sala_nome: Sala de Reuniões
                   usuario_nome: Ana
+                  usuario_email: ana@example.com
         '400':
           description: ID da sala ou data inválidos no filtro do ADM
           content:
@@ -487,8 +507,9 @@ paths:
       tags: [Reservas]
       summary: Criar reserva
       description: >-
-        Reserva uma sala em uma data e hora. Apenas CLIENTE. O valor da reserva
-        é o valor da hora da sala no momento da criação.
+        Reserva uma sala em uma data e hora. Apenas CLIENTE. O início da reserva
+        deve ser posterior ao momento da solicitação no horário local do servidor.
+        O valor da reserva é o valor da hora da sala no momento da criação.
       security:
         - bearerAuth: []
       requestBody:
@@ -516,7 +537,7 @@ paths:
             application/json:
               example: { "id": 7, "usuario_id": 3, "sala_id": 2, "data": "2099-12-31", "hora": 9, "valor": 80 }
         '400':
-          description: Data inválida / Horário inválido (deve ser de 8 a 17)
+          description: Data inválida, horário fora da faixa de 8 a 17 ou horário já iniciado
         '401':
           description: Token ausente ou inválido
         '403':

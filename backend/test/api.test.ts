@@ -10,7 +10,7 @@ import { backendRoot } from '../src/main/paths.js';
 const directory = mkdtempSync(join(tmpdir(), 'mh-clean-'));
 const databasePath = join(directory, 'test.db');
 const emails: { para: string; texto: string }[] = [];
-const config = { databasePath, jwtSecret: 'test-only-secret', clock: { now: () => new Date(2030, 0, 1) }, email: { enviar: async (para: string, _assunto: string, texto: string) => { emails.push({ para, texto }); } } };
+const config = { databasePath, jwtSecret: 'test-only-secret', clock: { now: () => new Date(2030, 0, 1, 12) }, email: { enviar: async (para: string, _assunto: string, texto: string) => { emails.push({ para, texto }); } } };
 let backend: ReturnType<typeof createBackend>;
 let server: Server;
 let base: string;
@@ -134,10 +134,36 @@ test('disponibilidade, validações, conflito e filtros de reservas', async () =
     const listed = (await request('/reservas', 'GET', undefined, client)).body;
     assert.equal(listed[0].sala_nome, 'Sala teste');
     assert.equal(listed[0].usuario_nome, 'Atualizado');
-    assert.equal((await request(`/reservas?sala_id=${salaId}&data=${input.data}`, 'GET', undefined, admin)).body.length, 1);
+    assert.equal(Object.hasOwn(listed[0], 'usuario_email'), false);
+    const adminList = (await request(`/reservas?sala_id=${salaId}&data=${input.data}`, 'GET', undefined, admin)).body;
+    assert.equal(adminList.length, 1);
+    assert.equal(adminList[0].usuario_nome, 'Atualizado');
+    assert.equal(adminList[0].usuario_email, 'cliente@example.com');
     assert.equal((await request('/reservas?data=2099-12-21', 'GET', undefined, admin)).body.length, 0);
     assert.equal((await request('/reservas?sala_id=abc', 'GET', undefined, admin)).status, 400);
     assert.equal((await request(`/salas/${salaId}`, 'DELETE', undefined, admin)).status, 409);
+});
+test('criação e disponibilidade exigem início estritamente futuro', async () => {
+    const today = '2030-01-01';
+    for (const [data, hora] of [['2029-12-31', 17], [today, 11], [today, 12]]) {
+        assert.deepEqual(await request('/reservas', 'POST', { sala_id: salaId, data, hora }, client), {
+            status: 400,
+            body: { erro: 'Somente horários futuros podem ser reservados.' },
+        });
+    }
+    const slots = (await request(`/salas/${salaId}/horarios?data=${today}`)).body as { hora: number; reservado: boolean; expirado: boolean }[];
+    assert.deepEqual(slots.slice(3, 6), [
+        { hora: 11, reservado: false, expirado: true },
+        { hora: 12, reservado: false, expirado: true },
+        { hora: 13, reservado: false, expirado: false },
+    ]);
+    const yesterdaySlots = (await request(`/salas/${salaId}/horarios?data=2029-12-31`)).body as typeof slots;
+    assert.equal(yesterdaySlots.every(slot => slot.expirado && !slot.reservado), true);
+    const input = { sala_id: salaId, data: today, hora: 13 };
+    const future = await request('/reservas', 'POST', input, client);
+    assert.equal(future.status, 201);
+    assert.equal((await request('/reservas', 'POST', input, secondClient)).status, 409);
+    assert.equal((await request(`/reservas/${future.body.id}`, 'DELETE', undefined, client)).status, 204);
 });
 test('cancelamento exige dono ou administrador e reserva futura', async () => {
     assert.equal((await request(`/reservas/${reservaId}`, 'DELETE', undefined, secondClient)).status, 403);
@@ -145,10 +171,12 @@ test('cancelamento exige dono ou administrador e reserva futura', async () => {
     assert.equal((await request(`/reservas/${reservaId}`, 'DELETE', undefined, client)).status, 404);
     const future = await request('/reservas', 'POST', { sala_id: salaId, data: '2099-12-21', hora: 10 }, client);
     assert.equal((await request(`/reservas/${future.body.id}`, 'DELETE', undefined, admin)).status, 204);
-    // Creating past reservations was already permitted; this migration preserves that rule.
-    const past = await request('/reservas', 'POST', { sala_id: salaId, data: '2000-01-01', hora: 10 }, client);
-    assert.equal(past.status, 201);
-    assert.equal((await request(`/reservas/${past.body.id}`, 'DELETE', undefined, client)).status, 400);
+    const past = backend.db.prepare('INSERT INTO reservas (usuario_id, sala_id, data, hora, valor) VALUES (?, ?, ?, ?, ?)')
+        .run(userId, salaId, '2000-01-01', 10, 40);
+    const history = await request('/reservas?data=2000-01-01', 'GET', undefined, admin);
+    assert.equal(history.body[0].id, Number(past.lastInsertRowid));
+    assert.equal(history.body[0].usuario_email, 'cliente@example.com');
+    assert.equal((await request(`/reservas/${past.lastInsertRowid}`, 'DELETE', undefined, client)).status, 400);
     assert.equal((await request(`/salas/${salaId}`, 'DELETE', undefined, client)).status, 403);
     assert.equal((await request(`/salas/${salaId}`, 'DELETE', undefined, admin)).status, 204);
 });

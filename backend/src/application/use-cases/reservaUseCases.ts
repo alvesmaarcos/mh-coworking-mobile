@@ -13,9 +13,11 @@ export function createReservaUseCases(reservaRepository: ReservaRepository, sala
         }
         const reservas = reservaRepository.listarPorSalaEData(sala_id, data);
         const horasReservadas = new Set(reservas.map((reserva) => reserva.hora));
+        const agora = clock.now();
         return HORARIOS_COWORKING.map((hora) => ({
             hora,
             reservado: horasReservadas.has(hora),
+            expirado: !reservaEhFutura({ data, hora }, agora),
         }));
     }
     function criarReserva(usuario: UsuarioAutenticado, { sala_id, data, hora }: ReservaInput) {
@@ -32,6 +34,9 @@ export function createReservaUseCases(reservaRepository: ReservaRepository, sala
         const horaNumero = Number(hora);
         if (!HORARIOS_COWORKING.includes(horaNumero)) {
             throw new DomainError("Horário inválido. Deve ser um dos horários do coworking (8 a 17)", "validation");
+        }
+        if (!reservaEhFutura({ data, hora: horaNumero }, clock.now())) {
+            throw new DomainError("Somente horários futuros podem ser reservados.", "validation");
         }
         const reservasExistentes = reservaRepository.listarPorSalaEData(sala_id, data);
         const conflito = reservasExistentes.some((reserva) => reserva.hora === horaNumero);

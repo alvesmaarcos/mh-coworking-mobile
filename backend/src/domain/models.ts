@@ -30,6 +30,7 @@ export interface Reserva {
 export interface ReservaListada extends Reserva {
     sala_nome: string;
     usuario_nome: string;
+    usuario_email?: string;
 }
 export interface SalaInput {
     nome: string;

@@ -108,7 +108,7 @@ export function ReservationsScreen({ api, session, onLogout, onNavigate, client 
     {notice ? <Pressable accessibilityRole="button" accessibilityLabel={`${notice} Fechar aviso`} onPress={() => setNotice('')} style={styles.notice}><Text accessibilityLiveRegion="polite" style={styles.noticeText}>{notice}</Text><Feather name="x" size={16} color={colors.navy} /></Pressable> : null}
     <View style={styles.list}>
     <FlatList data={loading || error ? [] : visible} keyExtractor={item => String(item.id)} style={{ flex: 1 }} contentContainerStyle={styles.listContent}
-      renderItem={({ item }) => <ReservationCard reservation={item} completed={tab === 'history'} onCancel={requestCancel} />}
+      renderItem={({ item }) => <ReservationCard reservation={item} completed={tab === 'history'} showRequester={session.usuario.tipo === 'ADM'} onCancel={requestCancel} />}
       ItemSeparatorComponent={Separator} refreshing={loading} onRefresh={reload}
       ListHeaderComponent={listError ? <View style={styles.state}><Text accessibilityRole="alert" style={styles.error}>{listError}</Text><Button title="Tentar novamente" secondary onPress={reload} /></View> : undefined}
       ListEmptyComponent={loading ? <View style={styles.state}><ActivityIndicator accessibilityLabel="Carregando reservas" color={colors.navy} /><Text style={styles.emptyText}>Carregando reservas…</Text></View> : !error ?
