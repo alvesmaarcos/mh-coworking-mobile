@@ -47,14 +47,15 @@ export default function App() {
               onLogout={() => logout()}
               onAccountDeleted={() => logout('Conta excluída com sucesso.')}
               onNavigate={setActiveTab}
-              disabledTabs={snapshot.session.usuario.tipo === 'CLIENTE' ? ['reservations'] : []}
             />
           ) : snapshot.session.usuario.tipo === 'ADM' ? (
             activeTab === 'rooms'
               ? <RoomsScreen key={snapshot.session.token} api={api} session={snapshot.session} onNavigate={setActiveTab} />
               : <ReservationsScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
           ) : (
-            <ClientHomeScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
+            activeTab === 'reservations'
+              ? <ReservationsScreen client key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
+              : <ClientHomeScreen key={snapshot.session.token} api={api} session={snapshot.session} onLogout={() => logout()} onNavigate={setActiveTab} />
           )
         ) : recovering ? (
           <PasswordRecoveryScreen api={api} onCancel={() => setRecovering(false)} onDone={notice => { setRecoveryNotice(notice); setRecovering(false); }} />

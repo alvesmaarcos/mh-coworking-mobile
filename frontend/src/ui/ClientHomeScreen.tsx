@@ -145,7 +145,7 @@ export function ClientHomeScreen({
         </View>
       )}
     />
-    <BottomNavigation active="rooms" onSelect={onNavigate} disabledTabs={['reservations']} />
+    <BottomNavigation active="rooms" onSelect={onNavigate} />
   </View>;
 }
 
